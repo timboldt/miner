@@ -13,13 +13,16 @@
 //  limitations under the License.
 
 use wasm_bindgen::prelude::*;
+use web_sys::console;
+
+// #[wasm_bindgen]
+// extern "C" {
+//     fn alert(s: &str);
+// }
 
 #[wasm_bindgen]
-extern "C" {
-    fn alert(s: &str);
-}
-
-#[wasm_bindgen]
-pub fn greet(name: &str) {
-    alert(&format!("I love the {}!", name));
+pub fn run(val: &str) {
+    console::log_2(&"run() called with".into(), &val.into());
+    //alert(&format!("I love the {}!", name));
+    console::log_1(&"run() complete".into());
 }

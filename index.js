@@ -4,5 +4,5 @@
 const rust = import('./pkg');
 
 rust
-  .then(m => m.greet('World!'))
+  .then(m => m.run('test'))
   .catch(console.error);
