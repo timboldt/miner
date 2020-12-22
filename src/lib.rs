@@ -13,14 +13,21 @@
 //  limitations under the License.
 
 use std::f64;
-use wasm_bindgen::JsCast;
 use wasm_bindgen::prelude::*;
+use wasm_bindgen::JsCast;
 use web_sys::console;
 
+mod game;
+
+use crate::game::*;
 
 #[wasm_bindgen(start)]
 pub fn start() {
     console::log_1(&"run() started".into());
+
+    let mine = Mine::new();
+    let _tile = mine.get_tile(20, 20);
+
     let document = web_sys::window().unwrap().document().unwrap();
     let canvas = document.get_element_by_id("canvas").unwrap();
     let canvas: web_sys::HtmlCanvasElement = canvas
@@ -44,7 +51,15 @@ pub fn start() {
 
     // Draw the mouth.
     context.move_to(100.0, 100.0);
-    context.arc(75.0, 75.0, 35.0, f64::consts::PI*0.25, f64::consts::PI*0.75).unwrap();
+    context
+        .arc(
+            75.0,
+            75.0,
+            35.0,
+            f64::consts::PI * 0.25,
+            f64::consts::PI * 0.75,
+        )
+        .unwrap();
 
     // Draw the left eye.
     context.move_to(65.0, 65.0);
