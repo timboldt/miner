@@ -49,6 +49,14 @@ impl Mine {
         m
     }
 
+    pub fn width(&self) -> u32 {
+        self.width
+    }
+
+    pub fn height(&self) -> u32 {
+        self.height
+    }
+
     pub fn get_tile(&self, x: u32, y: u32) -> Tile {
         if x >= self.width || y >= self.height {
             return Tile::Invalid;

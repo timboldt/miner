@@ -14,6 +14,7 @@
 
 mod mine;
 use mine::{Mine, Tile};
+use std::fmt;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Direction {
@@ -24,7 +25,7 @@ pub enum Direction {
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-struct Point {
+pub struct Point {
     x: u32,
     y: u32,
 }
@@ -80,6 +81,28 @@ impl Game {
 
     fn set_player_pos(&mut self, pt: Point) {
         self.player_pos = pt;
+    }
+}
+
+impl fmt::Display for Game {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let mut out = String::new();
+        for y in 0..self.mine.height() {
+            for x in 0..self.mine.width() {
+                if self.player_pos.x == x && self.player_pos.y == y {
+                    out += "*";
+                } else {
+                    out += match self.get_tile(Point{x, y}) {
+                        Tile::Empty => "\u{2591}",
+                        Tile::KnownDirt | Tile::UnexploredDirt => "\u{2592}",
+                        Tile::Grass =>  "\u{2593}",
+                        _ => "?",
+                    };    
+                }
+            }
+            out += "\n";
+        }
+        write!(f, "{}", out)
     }
 }
 
