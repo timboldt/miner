@@ -18,15 +18,14 @@ use wasm_bindgen::JsCast;
 use web_sys::console;
 
 mod game;
-
 use crate::game::*;
 
 #[wasm_bindgen(start)]
 pub fn start() {
     console::log_1(&"run() started".into());
 
-    let mine = Mine::new();
-    let _tile = mine.get_tile(20, 20);
+    let _game = Game::new();
+    //let _tile = mine.get_tile(20, 20);
 
     let document = web_sys::window().unwrap().document().unwrap();
     let canvas = document.get_element_by_id("canvas").unwrap();
