@@ -14,10 +14,12 @@
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Tile {
-    Empty,
-    Dirt,
-    Grass,
-    Invalid,
+    Empty,          // Empty space.
+    UnexploredDirt, // Looks like dirt until examined.
+    KnownDirt,      // Just plain dirt - diggable.
+    Grass,          // Impenetrable surface material.
+    Ladder,
+    Invalid, // Beyond the edge of the universe.
 }
 
 pub struct Mine {
@@ -31,7 +33,7 @@ impl Mine {
         let mut m = Mine {
             height: 50,
             width: 50,
-            tiles: vec![Tile::Dirt; 50 * 50],
+            tiles: vec![Tile::UnexploredDirt; 50 * 50],
         };
         for x in 0..m.width {
             // Two rows of sky.
@@ -71,7 +73,7 @@ mod tests {
     #[test]
     fn valid_tile() {
         let mine = Mine::new();
-        assert_eq!(Tile::Dirt, mine.get_tile(20, 20));
+        assert_eq!(Tile::UnexploredDirt, mine.get_tile(20, 20));
     }
 
     #[test]

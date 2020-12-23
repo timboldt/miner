@@ -12,21 +12,109 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-pub mod mine;
+mod mine;
 use mine::{Mine, Tile};
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Direction {
+    Left,
+    Right,
+    Up,
+    Down,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+struct Point {
+    x: u32,
+    y: u32,
+}
 
 pub struct Game {
     mine: Mine,
-    player_x: u32,
-    player_y: u32,
+    player_pos: Point,
 }
 
 impl Game {
     pub fn new() -> Game {
         Game {
             mine: Mine::new(),
-            player_x: 40,
-            player_y: 1,
+            player_pos: Point { x: 40, y: 1 },
         }
+    }
+
+    pub fn player_tile(&self) -> Tile {
+        self.get_tile(self.player_pos)
+    }
+
+    pub fn move_player(&mut self, command: Direction) {
+        if command == Direction::Up && self.player_tile() != Tile::Ladder {
+            // Can't climb without a ladder.
+            return;
+        }
+        let target_pos = match command {
+            Direction::Left => Point {
+                x: self.player_pos.x - 1,
+                y: self.player_pos.y,
+            },
+            Direction::Right => Point {
+                x: self.player_pos.x + 1,
+                y: self.player_pos.y,
+            },
+            Direction::Up => Point {
+                x: self.player_pos.x,
+                y: self.player_pos.y - 1,
+            },
+            Direction::Down => Point {
+                x: self.player_pos.x,
+                y: self.player_pos.y + 1,
+            },
+        };
+        if self.get_tile(target_pos) == Tile::Empty {
+            self.set_player_pos(target_pos);
+        }
+    }
+
+    pub fn get_tile(&self, pt: Point) -> Tile {
+        self.mine.get_tile(pt.x, pt.y)
+    }
+
+    fn set_player_pos(&mut self, pt: Point) {
+        self.player_pos = pt;
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn walk_left_right() {
+        let mut game = Game::new();
+        game.mine.set_tile(19, 20, Tile::Empty);
+        game.mine.set_tile(20, 20, Tile::Empty);
+        game.set_player_pos(Point { x: 20, y: 20 });
+        assert_eq!(Point { x: 20, y: 20 }, game.player_pos);
+        game.move_player(Direction::Left);
+        assert_eq!(Point { x: 19, y: 20 }, game.player_pos);
+        game.move_player(Direction::Right);
+        assert_eq!(Point { x: 20, y: 20 }, game.player_pos);
+    }
+
+    #[test]
+    fn climb_ladder() {
+        let mut game = Game::new();
+        game.mine.set_tile(20, 19, Tile::Empty);
+        game.mine.set_tile(20, 20, Tile::Empty);
+        game.set_player_pos(Point { x: 20, y: 20 });
+        assert_eq!(Point { x: 20, y: 20 }, game.player_pos);
+
+        // Can't climb without a ladder.
+        game.move_player(Direction::Up);
+        assert_eq!(Point { x: 20, y: 20 }, game.player_pos);
+
+        // Climbing works with a ladder.
+        game.mine.set_tile(20, 20, Tile::Ladder);
+        game.move_player(Direction::Up);
+        assert_eq!(Point { x: 20, y: 19 }, game.player_pos);
     }
 }
