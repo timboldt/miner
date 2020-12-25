@@ -29,70 +29,25 @@ macro_rules! console_log {
     ($($t:tt)*) => (log(&format_args!($($t)*).to_string()))
 }
 
-#[wasm_bindgen(start)]
-pub fn start() {
-    let window = web_sys::window().expect("should have a window in this context");
-    let performance = window
-        .performance()
-        .expect("performance should be available");
-    console_log!("start time (in ms) is {}", performance.now());
+#[wasm_bindgen]
+pub struct WebGame {
+    game: Game,
+}
 
-    let mut game = Game::new();
-    game.move_player(Direction::Right);
+#[wasm_bindgen]
+impl WebGame {
+    #[wasm_bindgen(constructor)]
+    pub fn new() -> Result<WebGame, JsValue> {
+        Ok(WebGame { game: Game::new() })
+    }
 
-    let document = web_sys::window().unwrap().document().unwrap();
-    let txtout :web_sys::HtmlElement= document.get_element_by_id("txtout").unwrap()
-        .dyn_into::<web_sys::HtmlElement>()
-        .map_err(|_| ())
-        .unwrap();
-    txtout.set_inner_text(&format!("{}", game));
+    #[wasm_bindgen]
+    pub fn get_text_repr(&self) -> JsValue {
+        JsValue::from_str(&format!("{}", self.game))
+    }
 
-    // let canvas = document.get_element_by_id("canvas").unwrap();
-    // let canvas: web_sys::HtmlCanvasElement = canvas
-    //     .dyn_into::<web_sys::HtmlCanvasElement>()
-    //     .map_err(|_| ())
-    //     .unwrap();
-
-    // let context = canvas
-    //     .get_context("2d")
-    //     .unwrap()
-    //     .unwrap()
-    //     .dyn_into::<web_sys::CanvasRenderingContext2d>()
-    //     .unwrap();
-
-    // context.begin_path();
-
-    // // Draw the outer circle.
-    // context
-    //     .arc(75.0, 75.0, 50.0, 0.0, f64::consts::PI * 2.0)
-    //     .unwrap();
-
-    // // Draw the mouth.
-    // context.move_to(100.0, 100.0);
-    // context
-    //     .arc(
-    //         75.0,
-    //         75.0,
-    //         35.0,
-    //         f64::consts::PI * 0.25,
-    //         f64::consts::PI * 0.75,
-    //     )
-    //     .unwrap();
-
-    // // Draw the left eye.
-    // context.move_to(65.0, 65.0);
-    // context
-    //     .arc(60.0, 65.0, 5.0, 0.0, f64::consts::PI * 2.0)
-    //     .unwrap();
-
-    // // Draw the right eye.
-    // context.move_to(95.0, 65.0);
-    // context
-    //     .arc(90.0, 65.0, 5.0, 0.0, f64::consts::PI * 2.0)
-    //     .unwrap();
-
-    // context.stroke();
-
-    //console::log_1(&format!("{:?}", duration).into());
-    console_log!("end time (in ms) is {}", performance.now());
+    #[wasm_bindgen]
+    pub fn move_player(&mut self, dir: &str) {
+        self.game.move_player(Direction::Right);
+    }
 }

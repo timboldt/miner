@@ -48,6 +48,16 @@ impl Game {
     }
 
     pub fn move_player(&mut self, command: Direction) {
+        let below = Point {
+            x: self.player_pos.x,
+            y: self.player_pos.y + 1,
+        };
+        if self.player_tile() == Tile::Empty && self.get_tile(below) == Tile::Empty {
+            // Fall.
+            self.set_player_pos(below);
+            return;
+        }
+
         if command == Direction::Up && self.player_tile() != Tile::Ladder {
             // Can't climb without a ladder.
             return;
@@ -92,12 +102,12 @@ impl fmt::Display for Game {
                 if self.player_pos.x == x && self.player_pos.y == y {
                     out += "*";
                 } else {
-                    out += match self.get_tile(Point{x, y}) {
+                    out += match self.get_tile(Point { x, y }) {
                         Tile::Empty => "\u{2591}",
                         Tile::KnownDirt | Tile::UnexploredDirt => "\u{2592}",
-                        Tile::Grass =>  "\u{2593}",
+                        Tile::Grass => "\u{2593}",
                         _ => "?",
-                    };    
+                    };
                 }
             }
             out += "\n";
