@@ -4,26 +4,9 @@ version = "0.1.0"
 authors = ["Tim Boldt <tim.boldt@gmail.com>"]
 edition = "2018"
 
-[lib]
-crate-type = ["cdylib"]
-
 [dependencies]
-js-sys = "0.3.46"
-wasm-bindgen = "0.2.69"
+bevy = "0.4.0"
 
 [dependencies.rand]
 version = "0.8.0"
 default-features = false
-
-[dependencies.web-sys]
-version = "0.3.4"
-features = [
-  'CanvasRenderingContext2d',
-  'console',
-  'Document',
-  'Element',
-  'HtmlCanvasElement',
-  'Performance',
-  'PerformanceTiming',
-  'Window',
-]

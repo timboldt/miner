@@ -14,48 +14,7 @@
 
 //use std::f64;
 use rand::prelude::*;
-use wasm_bindgen::prelude::*;
-use wasm_bindgen::JsCast;
 
 mod game;
 use crate::game::*;
 
-#[wasm_bindgen]
-extern "C" {
-    #[wasm_bindgen(js_namespace = console)]
-    fn log(a: &str);
-}
-
-macro_rules! console_log {
-    ($($t:tt)*) => (log(&format_args!($($t)*).to_string()))
-}
-
-#[wasm_bindgen]
-pub struct WebGame {
-    game: Game,
-}
-
-#[wasm_bindgen]
-impl WebGame {
-    #[wasm_bindgen(constructor)]
-    pub fn new() -> Result<WebGame, JsValue> {
-        Ok(WebGame { game: Game::new() })
-    }
-
-    #[wasm_bindgen]
-    pub fn get_text_repr(&self) -> JsValue {
-        JsValue::from_str(&format!("{}", self.game))
-    }
-
-    #[wasm_bindgen]
-    pub fn move_player(&mut self, dir: &str) {
-        // let mut rng = rand:
-        // let d : u32 = rng.gen();
-        // match d%4  {
-        //     0 => self.game.move_player(Direction::Left),
-        //     _ => self.game.move_player(Direction::Right),
-        // }
-
-        self.game.move_player(Direction::Right);
-    }
-}
