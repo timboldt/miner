@@ -13,6 +13,7 @@
 //  limitations under the License.
 
 //use std::f64;
+use rand::prelude::*;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
@@ -48,6 +49,13 @@ impl WebGame {
 
     #[wasm_bindgen]
     pub fn move_player(&mut self, dir: &str) {
+        // let mut rng = rand:
+        // let d : u32 = rng.gen();
+        // match d%4  {
+        //     0 => self.game.move_player(Direction::Left),
+        //     _ => self.game.move_player(Direction::Right),
+        // }
+
         self.game.move_player(Direction::Right);
     }
 }
