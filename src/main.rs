@@ -18,3 +18,7 @@ use rand::prelude::*;
 mod game;
 use crate::game::*;
 
+fn main() {
+    let mut game = Game::new();
+    println!("{}", game);
+}
