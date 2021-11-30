@@ -13,7 +13,7 @@
 //  limitations under the License.
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum Tile {
+pub enum MineTile {
     Empty,          // Empty space.
     UnexploredDirt, // Looks like dirt until examined.
     KnownDirt,      // Just plain dirt - diggable.
@@ -25,7 +25,7 @@ pub enum Tile {
 pub struct Mine {
     height: u32,
     width: u32,
-    tiles: Vec<Tile>,
+    tiles: Vec<MineTile>,
 }
 
 impl Mine {
@@ -33,18 +33,18 @@ impl Mine {
         let mut m = Mine {
             height: 50,
             width: 50,
-            tiles: vec![Tile::UnexploredDirt; 50 * 50],
+            tiles: vec![MineTile::UnexploredDirt; 50 * 50],
         };
         for x in 0..m.width {
             // Two rows of sky.
-            m.set_tile(x, 0, Tile::Empty);
-            m.set_tile(x, 1, Tile::Empty);
+            m.set_tile(x, 0, MineTile::Empty);
+            m.set_tile(x, 1, MineTile::Empty);
             // One row of impenetrable "grass".
-            m.set_tile(x, 2, Tile::Grass);
+            m.set_tile(x, 2, MineTile::Grass);
         }
         for y in 0..m.height {
             // Elevator shaft.
-            m.set_tile(m.width - 2, y, Tile::Empty);
+            m.set_tile(m.width - 2, y, MineTile::Empty);
         }
         m
     }
@@ -57,15 +57,15 @@ impl Mine {
         self.height
     }
 
-    pub fn get_tile(&self, x: u32, y: u32) -> Tile {
+    pub fn get_tile(&self, x: u32, y: u32) -> MineTile {
         if x >= self.width || y >= self.height {
-            return Tile::Invalid;
+            return MineTile::Invalid;
         }
         let idx = (y * self.width + x) as usize;
         self.tiles[idx]
     }
 
-    pub fn set_tile(&mut self, x: u32, y: u32, tile: Tile) {
+    pub fn set_tile(&mut self, x: u32, y: u32, tile: MineTile) {
         if x >= self.width || y >= self.height {
             panic!("invalid tile address");
         }
@@ -81,13 +81,13 @@ mod tests {
     #[test]
     fn valid_tile() {
         let mine = Mine::new();
-        assert_eq!(Tile::UnexploredDirt, mine.get_tile(20, 20));
+        assert_eq!(MineTile::UnexploredDirt, mine.get_tile(20, 20));
     }
 
     #[test]
     fn invalid_tile() {
         let mine = Mine::new();
-        assert_eq!(Tile::Invalid, mine.get_tile(200, 20));
-        assert_eq!(Tile::Invalid, mine.get_tile(20, 200));
+        assert_eq!(MineTile::Invalid, mine.get_tile(200, 20));
+        assert_eq!(MineTile::Invalid, mine.get_tile(20, 200));
     }
 }
