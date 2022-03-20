@@ -1,0 +1,8 @@
+[package]
+name = "miner"
+version = "0.1.0"
+authors = ["Tim Boldt <tim.boldt@gmail.com>"]
+edition = "2021"
+
+[dependencies]
+bracket-lib = "~0.8.1"
