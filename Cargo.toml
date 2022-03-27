@@ -5,4 +5,5 @@ authors = ["Tim Boldt <tim.boldt@gmail.com>"]
 edition = "2021"
 
 [dependencies]
-bracket-lib = "~0.8.1"
+bevy = "0.6"
+bevy_simple_tilemap = "0.7.0"
