@@ -79,19 +79,47 @@ fn setup(
 ) {
     // Load tilesheet texture and make a texture atlas from it
     let texture_handle = asset_server.load("64x64_tileset.png");
-    let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(64.0, 64.0), 14, 14);
+    let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(64.0, 64.0), 10, 2);
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
 
     let tiles = vec![
         (
             ivec3(-1, 0, 0),
             Some(Tile {
-                sprite_index: 14,
+                sprite_index: 0,
+                ..Default::default()
+            }),
+        ),
+        (
+            ivec3(-1, 1, 0),
+            Some(Tile {
+                sprite_index: 0,
+                ..Default::default()
+            }),
+        ),
+        (
+            ivec3(-1, -1, 0),
+            Some(Tile {
+                sprite_index: 0,
                 ..Default::default()
             }),
         ),
         (
             ivec3(1, 0, 0),
+            Some(Tile {
+                sprite_index: 1,
+                ..Default::default()
+            }),
+        ),
+        (
+            ivec3(0, 0, 0),
+            Some(Tile {
+                sprite_index: 1,
+                ..Default::default()
+            }),
+        ),
+        (
+            ivec3(2, 0, 0),
             Some(Tile {
                 sprite_index: 1,
                 ..Default::default()

@@ -1,0 +1,8 @@
+Original 64x64 tileset was taken from here and then modified:
+https://opengameart.org/content/just-some-32x32-tiles.
+
+Produced by:
+https://opengameart.org/users/owlishmedia
+
+Creative Commons CCO 1.0
+https://creativecommons.org/publicdomain/zero/1.0/
