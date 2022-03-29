@@ -82,67 +82,8 @@ fn setup(
     let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(64.0, 64.0), 10, 2);
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
 
-    let tiles = vec![
-        (
-            ivec3(-1, 0, 0),
-            Some(Tile {
-                sprite_index: 0,
-                ..Default::default()
-            }),
-        ),
-        (
-            ivec3(-1, 1, 0),
-            Some(Tile {
-                sprite_index: 0,
-                ..Default::default()
-            }),
-        ),
-        (
-            ivec3(-1, -1, 0),
-            Some(Tile {
-                sprite_index: 0,
-                ..Default::default()
-            }),
-        ),
-        (
-            ivec3(1, 0, 0),
-            Some(Tile {
-                sprite_index: 1,
-                ..Default::default()
-            }),
-        ),
-        (
-            ivec3(0, 0, 0),
-            Some(Tile {
-                sprite_index: 1,
-                ..Default::default()
-            }),
-        ),
-        (
-            ivec3(2, 0, 0),
-            Some(Tile {
-                sprite_index: 1,
-                ..Default::default()
-            }),
-        ),
-        (
-            ivec3(0, -1, 0),
-            Some(Tile {
-                sprite_index: 2,
-                ..Default::default()
-            }),
-        ),
-        (
-            ivec3(0, 1, 0),
-            Some(Tile {
-                sprite_index: 3,
-                ..Default::default()
-            }),
-        ),
-    ];
-
     let mut tilemap = TileMap::default();
-    tilemap.set_tiles(tiles);
+    populate_tiles(&mut tilemap);
 
     let tilemap_bundle = TileMapBundle {
         tilemap,
@@ -157,4 +98,48 @@ fn setup(
 
     commands.spawn_bundle(OrthographicCameraBundle::new_2d());
     commands.spawn_bundle(tilemap_bundle);
+}
+
+enum TileType {
+    Empty = 0,
+    Dirt = 1,
+    Grass = 6,
+    Border = 8,
+    Sky = 9,
+}
+
+fn populate_tiles(tm: &mut TileMap) {
+    const WIDTH: i32 = 50;
+    const DEPTH: i32 = 30;
+    const SKY_HEIGHT : i32 = 3;
+    for x in 0..WIDTH {
+        set_tile(tm, x, 2, TileType::Sky);
+        set_tile(tm, x, 1, TileType::Sky);
+        set_tile(tm, x, 0, TileType::Sky);
+        set_tile(tm, x, -1, TileType::Grass);
+        for y in -DEPTH..-1 {
+            set_tile(tm, x, y, TileType::Dirt);
+        }
+    }
+    for y in -DEPTH..0 {
+        set_tile(tm, WIDTH - 2, y, TileType::Empty);
+    }
+    for x in -1..WIDTH+1 {
+        set_tile(tm, x, SKY_HEIGHT, TileType::Border);
+        set_tile(tm, x, -DEPTH-1, TileType::Border);
+    }
+    for y in -DEPTH..SKY_HEIGHT {
+        set_tile(tm, -1, y, TileType::Border);
+        set_tile(tm, WIDTH, y, TileType::Border);
+    }
+}
+
+fn set_tile(tm: &mut TileMap, x: i32, y: i32, t: TileType) {
+    tm.set_tile(
+        ivec3(x, y, 0),
+        Some(Tile {
+            sprite_index: t as u32,
+            ..Default::default()
+        }),
+    )
 }
