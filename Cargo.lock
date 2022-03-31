@@ -1898,6 +1898,7 @@ version = "0.1.0"
 dependencies = [
  "bevy",
  "bevy_simple_tilemap",
+ "rand",
 ]
 
 [[package]]

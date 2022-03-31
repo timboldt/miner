@@ -21,6 +21,7 @@ use bevy::{
 };
 
 use bevy_simple_tilemap::prelude::*;
+use rand::Rng;
 
 fn main() {
     App::new()
@@ -102,7 +103,11 @@ fn setup(
 
 enum TileType {
     Empty = 0,
-    Dirt = 1,
+    Dirt,
+    Sandstone,
+    Limestone,
+    Granite,
+    Bedrock,
     Grass = 6,
     Border = 8,
     Sky = 9,
@@ -112,13 +117,23 @@ fn populate_tiles(tm: &mut TileMap) {
     const WIDTH: i32 = 50;
     const DEPTH: i32 = 30;
     const SKY_HEIGHT : i32 = 3;
+
+    let mut rng = rand::thread_rng();
+
     for x in 0..WIDTH {
         set_tile(tm, x, 2, TileType::Sky);
         set_tile(tm, x, 1, TileType::Sky);
         set_tile(tm, x, 0, TileType::Sky);
         set_tile(tm, x, -1, TileType::Grass);
         for y in -DEPTH..-1 {
-            set_tile(tm, x, y, TileType::Dirt);
+            let t = match rng.gen_range(0..100) {
+                x if x < 10 => TileType::Sandstone,
+                x if x < 20 => TileType::Limestone,
+                x if x < 30 => TileType::Granite,
+                x if x < 40 => TileType::Bedrock,
+                _ => TileType::Dirt, 
+            };
+            set_tile(tm, x, y, t);
         }
     }
     for y in -DEPTH..0 {
