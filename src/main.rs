@@ -118,7 +118,7 @@ enum TileType {
     ElevatorHook = 20,
     ElevatorTowerTop = 21,
     ElevatorTowerBottom = 31,
-    //ElevatorCable = 32,
+    ElevatorCable = 32,
 }
 
 fn populate_tiles(tm: &mut TileMap) {
@@ -159,7 +159,7 @@ fn populate_tiles(tm: &mut TileMap) {
 
     // Person in layer 1.
     tm.set_tile(
-        ivec3(WIDTH - 2, 0, 1),
+        ivec3(WIDTH - 2, -2, 1),
         Some(Tile {
             sprite_index: TileType::Person as u32,
             ..Default::default()
@@ -168,9 +168,23 @@ fn populate_tiles(tm: &mut TileMap) {
 
     // Elevator in layer 2.
     tm.set_tile(
-        ivec3(WIDTH - 2, 0, 2),
+        ivec3(WIDTH - 2, -2, 2),
         Some(Tile {
             sprite_index: TileType::Elevator as u32,
+            ..Default::default()
+        }),
+    );
+    tm.set_tile(
+        ivec3(WIDTH - 2, -1, 2),
+        Some(Tile {
+            sprite_index: TileType::ElevatorCable as u32,
+            ..Default::default()
+        }),
+    );
+    tm.set_tile(
+        ivec3(WIDTH - 2, 0, 2),
+        Some(Tile {
+            sprite_index: TileType::ElevatorCable as u32,
             ..Default::default()
         }),
     );
