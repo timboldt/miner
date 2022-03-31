@@ -80,7 +80,7 @@ fn setup(
 ) {
     // Load tilesheet texture and make a texture atlas from it
     let texture_handle = asset_server.load("64x64_tileset.png");
-    let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(64.0, 64.0), 10, 2);
+    let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(64.0, 64.0), 10, 4);
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
 
     let mut tilemap = TileMap::default();
@@ -109,8 +109,16 @@ enum TileType {
     Granite,
     Bedrock,
     Grass = 6,
+    Water = 7,
     Border = 8,
     Sky = 9,
+
+    Person = 10,
+    Elevator = 30,
+    ElevatorHook = 20,
+    ElevatorTowerTop = 21,
+    ElevatorTowerBottom = 31,
+    //ElevatorCable = 32,
 }
 
 fn populate_tiles(tm: &mut TileMap) {
@@ -127,10 +135,11 @@ fn populate_tiles(tm: &mut TileMap) {
         set_tile(tm, x, -1, TileType::Grass);
         for y in -DEPTH..-1 {
             let t = match rng.gen_range(0..100) {
-                x if x < 10 => TileType::Sandstone,
-                x if x < 20 => TileType::Limestone,
-                x if x < 30 => TileType::Granite,
-                x if x < 40 => TileType::Bedrock,
+                r if r < 10 => TileType::Sandstone,
+                r if r < 20 => TileType::Limestone,
+                r if r < 30 => TileType::Granite,
+                r if r < 35 => TileType::Bedrock,
+                r if r < 40 => TileType::Water,
                 _ => TileType::Dirt, 
             };
             set_tile(tm, x, y, t);
@@ -147,6 +156,45 @@ fn populate_tiles(tm: &mut TileMap) {
         set_tile(tm, -1, y, TileType::Border);
         set_tile(tm, WIDTH, y, TileType::Border);
     }
+
+    // Person in layer 1.
+    tm.set_tile(
+        ivec3(WIDTH - 2, 0, 1),
+        Some(Tile {
+            sprite_index: TileType::Person as u32,
+            ..Default::default()
+        }),
+    );
+
+    // Elevator in layer 2.
+    tm.set_tile(
+        ivec3(WIDTH - 2, 0, 2),
+        Some(Tile {
+            sprite_index: TileType::Elevator as u32,
+            ..Default::default()
+        }),
+    );
+    tm.set_tile(
+        ivec3(WIDTH - 2, 1, 2),
+        Some(Tile {
+            sprite_index: TileType::ElevatorHook as u32,
+            ..Default::default()
+        }),
+    );
+    tm.set_tile(
+        ivec3(WIDTH - 1, 1, 2),
+        Some(Tile {
+            sprite_index: TileType::ElevatorTowerTop as u32,
+            ..Default::default()
+        }),
+    );
+    tm.set_tile(
+        ivec3(WIDTH - 1, 0, 2),
+        Some(Tile {
+            sprite_index: TileType::ElevatorTowerBottom as u32,
+            ..Default::default()
+        }),
+    );
 }
 
 fn set_tile(tm: &mut TileMap, x: i32, y: i32, t: TileType) {
