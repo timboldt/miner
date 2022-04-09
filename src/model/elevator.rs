@@ -49,7 +49,6 @@ impl Elevator {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -99,4 +98,3 @@ mod tests {
         assert_eq!(0u32, elev.depth());
     }
 }
-
