@@ -23,7 +23,13 @@ use bevy::{
 use bevy_simple_tilemap::prelude::*;
 use rand::Rng;
 
+mod model;
+use model::elevator::Elevator;
+
 fn main() {
+    // TODO: Move this elsewhere.
+    let _x = Elevator::new(42);
+
     App::new()
         // Disable MSAA, as it produces weird rendering artifacts
         .insert_resource(Msaa { samples: 1 })
@@ -124,7 +130,7 @@ enum TileType {
 fn populate_tiles(tm: &mut TileMap) {
     const WIDTH: i32 = 50;
     const DEPTH: i32 = 30;
-    const SKY_HEIGHT : i32 = 3;
+    const SKY_HEIGHT: i32 = 3;
 
     let mut rng = rand::thread_rng();
 
@@ -134,29 +140,33 @@ fn populate_tiles(tm: &mut TileMap) {
         set_tile(tm, x, 0, TileType::Sky);
         set_tile(tm, x, -1, TileType::Grass);
         for y in -DEPTH..-1 {
-            let t = match rng.gen_range(0..100) {
-                r if r < 10 => TileType::Sandstone,
-                r if r < 20 => TileType::Limestone,
-                r if r < 30 => TileType::Granite,
-                r if r < 35 => TileType::Bedrock,
-                r if r < 40 => TileType::Water,
-                _ => TileType::Dirt, 
-            };
-            set_tile(tm, x, y, t);
+            if x < WIDTH - 2 {
+                let t = match rng.gen_range(0..100) {
+                    r if r < 10 => TileType::Sandstone,
+                    r if r < 20 => TileType::Limestone,
+                    r if r < 30 => TileType::Granite,
+                    r if r < 35 => TileType::Bedrock,
+                    r if r < 40 => TileType::Water,
+                    _ => TileType::Dirt,
+                };
+                set_tile(tm, x, y, t);
+            } else {
+                set_tile(tm, x, y, TileType::Dirt);
+            }
         }
     }
     for y in -DEPTH..0 {
         set_tile(tm, WIDTH - 2, y, TileType::Empty);
     }
-    for x in -1..WIDTH+1 {
+    for x in -1..WIDTH + 1 {
         set_tile(tm, x, SKY_HEIGHT, TileType::Border);
-        set_tile(tm, x, -DEPTH-1, TileType::Border);
+        set_tile(tm, x, -DEPTH - 1, TileType::Border);
     }
     for y in -DEPTH..SKY_HEIGHT {
         set_tile(tm, -1, y, TileType::Border);
         set_tile(tm, WIDTH, y, TileType::Border);
     }
-
+  
     // Person in layer 1.
     tm.set_tile(
         ivec3(WIDTH - 2, -2, 1),
