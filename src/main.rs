@@ -103,7 +103,10 @@ fn setup(
         ..Default::default()
     };
 
-    commands.spawn_bundle(OrthographicCameraBundle::new_2d());
+    let mut cam = OrthographicCameraBundle::new_2d();
+    cam.transform.translation.x = 1800f32;
+    cam.transform.translation.y = -200f32;
+    commands.spawn_bundle(cam);
     commands.spawn_bundle(tilemap_bundle);
 }
 
@@ -166,7 +169,7 @@ fn populate_tiles(tm: &mut TileMap) {
         set_tile(tm, -1, y, TileType::Border);
         set_tile(tm, WIDTH, y, TileType::Border);
     }
-  
+
     // Person in layer 1.
     tm.set_tile(
         ivec3(WIDTH - 2, -2, 1),
