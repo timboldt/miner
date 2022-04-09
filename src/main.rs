@@ -21,15 +21,17 @@ use bevy::{
 };
 
 use bevy_simple_tilemap::prelude::*;
-use rand::Rng;
+//use rand::Rng;
 
 mod model;
 use model::elevator::Elevator;
+use model::map::{Map, TileType};
 use model::player::Player;
 
 fn main() {
     // TODO: Move this elsewhere.
     let _x = Elevator::new(42);
+    let _m: Map = Map::new(100, 100);
     let _p: Player = Player::new(48, -2);
 
     App::new()
@@ -112,19 +114,87 @@ fn setup(
     commands.spawn_bundle(tilemap_bundle);
 }
 
-enum TileType {
+fn populate_tiles(tm: &mut TileMap) {
+    const HEIGHT: i32 = 30;
+    const WIDTH: i32 = 50;
+
+    //let mut rng = rand::thread_rng();
+
+    let m: Map = Map::new(HEIGHT as usize, WIDTH as usize);
+    for x in 0..WIDTH {
+        for y in 0..HEIGHT {
+            set_tile(tm, x, -y, m.tile(x, y));
+        }
+    }
+
+    // Person in layer 1.
+    tm.set_tile(
+        ivec3(WIDTH - 3, -5, 1),
+        Some(Tile {
+            sprite_index: SpriteIndex::Person as u32,
+            ..Default::default()
+        }),
+    );
+
+    // Elevator in layer 2.
+    tm.set_tile(
+        ivec3(WIDTH - 3, -5, 2),
+        Some(Tile {
+            sprite_index: SpriteIndex::Elevator as u32,
+            ..Default::default()
+        }),
+    );
+    tm.set_tile(
+        ivec3(WIDTH - 3, -4, 2),
+        Some(Tile {
+            sprite_index: SpriteIndex::ElevatorCable as u32,
+            ..Default::default()
+        }),
+    );
+    tm.set_tile(
+        ivec3(WIDTH - 3, -3, 2),
+        Some(Tile {
+            sprite_index: SpriteIndex::ElevatorCable as u32,
+            ..Default::default()
+        }),
+    );
+    tm.set_tile(
+        ivec3(WIDTH - 3, -2, 2),
+        Some(Tile {
+            sprite_index: SpriteIndex::ElevatorHook as u32,
+            ..Default::default()
+        }),
+    );
+    tm.set_tile(
+        ivec3(WIDTH - 2, -2, 2),
+        Some(Tile {
+            sprite_index: SpriteIndex::ElevatorTowerTop as u32,
+            ..Default::default()
+        }),
+    );
+    tm.set_tile(
+        ivec3(WIDTH - 2, -3, 2),
+        Some(Tile {
+            sprite_index: SpriteIndex::ElevatorTowerBottom as u32,
+            ..Default::default()
+        }),
+    );
+}
+
+enum SpriteIndex {
     Empty = 0,
     Dirt,
-    Sandstone,
-    Limestone,
-    Granite,
-    Bedrock,
-    Grass = 6,
-    Water = 7,
-    Border = 8,
-    Sky = 9,
+    Stone0,
+    _Stone1,
+    _Stone2,
+    _Stone3,
+    Grass,
+    Water,
+    Border,
+    Sky,
 
     Person = 10,
+
     Elevator = 30,
     ElevatorHook = 20,
     ElevatorTowerTop = 21,
@@ -132,106 +202,41 @@ enum TileType {
     ElevatorCable = 32,
 }
 
-fn populate_tiles(tm: &mut TileMap) {
-    const WIDTH: i32 = 50;
-    const DEPTH: i32 = 30;
-    const SKY_HEIGHT: i32 = 3;
-
-    let mut rng = rand::thread_rng();
-
-    for x in 0..WIDTH {
-        set_tile(tm, x, 2, TileType::Sky);
-        set_tile(tm, x, 1, TileType::Sky);
-        set_tile(tm, x, 0, TileType::Sky);
-        set_tile(tm, x, -1, TileType::Grass);
-        for y in -DEPTH..-1 {
-            if x < WIDTH - 2 {
-                let t = match rng.gen_range(0..100) {
-                    r if r < 10 => TileType::Sandstone,
-                    r if r < 20 => TileType::Limestone,
-                    r if r < 30 => TileType::Granite,
-                    r if r < 35 => TileType::Bedrock,
-                    r if r < 40 => TileType::Water,
-                    _ => TileType::Dirt,
-                };
-                set_tile(tm, x, y, t);
-            } else {
-                set_tile(tm, x, y, TileType::Dirt);
-            }
-        }
-    }
-    for y in -DEPTH..0 {
-        set_tile(tm, WIDTH - 2, y, TileType::Empty);
-    }
-    for x in -1..WIDTH + 1 {
-        set_tile(tm, x, SKY_HEIGHT, TileType::Border);
-        set_tile(tm, x, -DEPTH - 1, TileType::Border);
-    }
-    for y in -DEPTH..SKY_HEIGHT {
-        set_tile(tm, -1, y, TileType::Border);
-        set_tile(tm, WIDTH, y, TileType::Border);
-    }
-
-    // Person in layer 1.
-    tm.set_tile(
-        ivec3(WIDTH - 2, -2, 1),
-        Some(Tile {
-            sprite_index: TileType::Person as u32,
-            ..Default::default()
-        }),
-    );
-
-    // Elevator in layer 2.
-    tm.set_tile(
-        ivec3(WIDTH - 2, -2, 2),
-        Some(Tile {
-            sprite_index: TileType::Elevator as u32,
-            ..Default::default()
-        }),
-    );
-    tm.set_tile(
-        ivec3(WIDTH - 2, -1, 2),
-        Some(Tile {
-            sprite_index: TileType::ElevatorCable as u32,
-            ..Default::default()
-        }),
-    );
-    tm.set_tile(
-        ivec3(WIDTH - 2, 0, 2),
-        Some(Tile {
-            sprite_index: TileType::ElevatorCable as u32,
-            ..Default::default()
-        }),
-    );
-    tm.set_tile(
-        ivec3(WIDTH - 2, 1, 2),
-        Some(Tile {
-            sprite_index: TileType::ElevatorHook as u32,
-            ..Default::default()
-        }),
-    );
-    tm.set_tile(
-        ivec3(WIDTH - 1, 1, 2),
-        Some(Tile {
-            sprite_index: TileType::ElevatorTowerTop as u32,
-            ..Default::default()
-        }),
-    );
-    tm.set_tile(
-        ivec3(WIDTH - 1, 0, 2),
-        Some(Tile {
-            sprite_index: TileType::ElevatorTowerBottom as u32,
-            ..Default::default()
-        }),
-    );
-}
-
 fn set_tile(tm: &mut TileMap, x: i32, y: i32, t: TileType) {
+    let si = match t {
+        TileType::Empty => SpriteIndex::Empty as u32,
+        TileType::Sky => SpriteIndex::Sky as u32,
+        TileType::Grass => SpriteIndex::Grass as u32,
+        TileType::Dirt => SpriteIndex::Dirt as u32,
+        TileType::Rock { hardness } => {
+            (SpriteIndex::Stone0 as u8 + core::cmp::min(hardness, 3)) as u32
+        }
+        TileType::Water => SpriteIndex::Water as u32,
+        _ => SpriteIndex::Border as u32,
+    };
     tm.set_tile(
         ivec3(x, y, 0),
         Some(Tile {
-            sprite_index: t as u32,
+            sprite_index: si,
             ..Default::default()
         }),
     )
 }
+
+//     let mut rng = rand::thread_rng();
+//         for y in -DEPTH..-1 {
+//             if x < WIDTH - 2 {
+//                 let t = match rng.gen_range(0..100) {
+//                     r if r < 10 => TileType::Sandstone,
+//                     r if r < 20 => TileType::Limestone,
+//                     r if r < 30 => TileType::Granite,
+//                     r if r < 35 => TileType::Bedrock,
+//                     r if r < 40 => TileType::Water,
+//                     _ => TileType::Dirt,
+//                 };
+//                 set_tile(tm, x, y, t);
+//             } else {
+//                 set_tile(tm, x, y, TileType::Dirt);
+//             }
+//         }
+//     }
