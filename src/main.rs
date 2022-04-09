@@ -31,7 +31,6 @@ use model::player::Player;
 fn main() {
     // TODO: Move this elsewhere.
     let _x = Elevator::new(42);
-    let _m: Map = Map::new(100, 100);
     let _p: Player = Player::new(48, -2);
 
     App::new()
@@ -120,7 +119,7 @@ fn populate_tiles(tm: &mut TileMap) {
 
     //let mut rng = rand::thread_rng();
 
-    let m: Map = Map::new(HEIGHT as usize, WIDTH as usize);
+    let m: Map = Map::new(WIDTH as usize, HEIGHT as usize);
     for x in 0..WIDTH {
         for y in 0..HEIGHT {
             set_tile(tm, x, -y, m.tile(x, y));

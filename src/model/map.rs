@@ -37,7 +37,7 @@ pub struct Map {
 }
 
 impl Map {
-    pub fn new(height: usize, width: usize) -> Self {
+    pub fn new(width: usize, height: usize) -> Self {
         let mut map = Map {
             height,
             width,
@@ -115,5 +115,27 @@ impl Map {
             self.set_tile(w - 4, 8 + i, TileType::Rock { hardness: i as u8 });
         }
         self.set_tile(w - 6, 10, TileType::Water);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn init_works() {
+        let m = Map::new(30, 20);
+        assert_eq!(TileType::Void, m.tile(-1, -1));
+        assert_eq!(TileType::Border, m.tile(0, 0));
+        assert_eq!(TileType::Sky, m.tile(1, 1));
+        assert_eq!(TileType::Grass, m.tile(1, GRASS_LEVEL));
+        assert_eq!(TileType::Dirt, m.tile(1, GRASS_LEVEL + 1));
+        assert_eq!(TileType::Border, m.tile(29, 19));
+        assert_eq!(TileType::Void, m.tile(30, 20));
+
+        // assert_eq!(4, p.y);
+        // assert_eq!(1000, p.money());
+        // assert_eq!(100, p.energy());
+        // assert_eq!(false, p.is_dead());
     }
 }

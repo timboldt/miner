@@ -149,5 +149,6 @@ mod tests {
         p.refill_energy();
         assert_eq!(2, p.energy());
         assert_eq!(0, p.money());
+        assert_eq!(false, p.is_dead());
     }
 }
