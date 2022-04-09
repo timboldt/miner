@@ -25,10 +25,12 @@ use rand::Rng;
 
 mod model;
 use model::elevator::Elevator;
+use model::player::Player;
 
 fn main() {
     // TODO: Move this elsewhere.
     let _x = Elevator::new(42);
+    let _p: Player = Player::new(48, -2);
 
     App::new()
         // Disable MSAA, as it produces weird rendering artifacts
