@@ -15,4 +15,4 @@
 #![warn(clippy::all, clippy::pedantic)]
 
 pub mod input;
-pub mod render_player;
+pub mod render;

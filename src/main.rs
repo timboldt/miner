@@ -38,8 +38,10 @@ fn main() {
         .add_plugin(SimpleTileMapPlugin)
         .add_startup_system(setup)
         .add_system(systems::input::camera_input)
+        .add_system(systems::input::elevator_input)
         .add_system(systems::input::player_input)
-        .add_system(systems::render_player::show_player)
+        .add_system(systems::render::show_player)
+        .add_system(systems::render::show_elevator)
         .run();
 }
 
@@ -83,59 +85,6 @@ fn populate_tiles(tm: &mut TileMap) {
             set_tile(tm, x, -y, m.tile(x, y));
         }
     }
-
-    // Person in layer 1.
-    tm.set_tile(
-        ivec3(MAP_WIDTH - 3, -5, 1),
-        Some(Tile {
-            sprite_index: SpriteIndex::Person as u32,
-            ..Default::default()
-        }),
-    );
-
-    // Elevator in layer 2.
-    tm.set_tile(
-        ivec3(MAP_WIDTH - 3, -5, 2),
-        Some(Tile {
-            sprite_index: SpriteIndex::Elevator as u32,
-            ..Default::default()
-        }),
-    );
-    tm.set_tile(
-        ivec3(MAP_WIDTH - 3, -4, 2),
-        Some(Tile {
-            sprite_index: SpriteIndex::ElevatorCable as u32,
-            ..Default::default()
-        }),
-    );
-    tm.set_tile(
-        ivec3(MAP_WIDTH - 3, -3, 2),
-        Some(Tile {
-            sprite_index: SpriteIndex::ElevatorCable as u32,
-            ..Default::default()
-        }),
-    );
-    tm.set_tile(
-        ivec3(MAP_WIDTH - 3, -2, 2),
-        Some(Tile {
-            sprite_index: SpriteIndex::ElevatorHook as u32,
-            ..Default::default()
-        }),
-    );
-    tm.set_tile(
-        ivec3(MAP_WIDTH - 2, -2, 2),
-        Some(Tile {
-            sprite_index: SpriteIndex::ElevatorTowerTop as u32,
-            ..Default::default()
-        }),
-    );
-    tm.set_tile(
-        ivec3(MAP_WIDTH - 2, -3, 2),
-        Some(Tile {
-            sprite_index: SpriteIndex::ElevatorTowerBottom as u32,
-            ..Default::default()
-        }),
-    );
 }
 
 fn set_tile(tm: &mut TileMap, x: i32, y: i32, t: TileType) {
