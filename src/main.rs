@@ -57,11 +57,12 @@ fn setup(
     let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(64.0, 64.0), 10, 4);
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
 
-    let map = Map::new(MAP_WIDTH as usize, MAP_HEIGHT as usize);
+    let mut cam = OrthographicCameraBundle::new_2d();
+    cam.transform.translation.x = 1800f32;
+    cam.transform.translation.y = -200f32;
+    commands.spawn_bundle(cam);
 
-    let mut tilemap = TileMap::default();
-    populate_tiles(&mut tilemap, &map);
-
+    let tilemap = TileMap::default();
     let tilemap_bundle = TileMapBundle {
         tilemap,
         texture_atlas: texture_atlas_handle.clone(),
@@ -72,59 +73,8 @@ fn setup(
         },
         ..Default::default()
     };
-
-    let mut cam = OrthographicCameraBundle::new_2d();
-    cam.transform.translation.x = 1800f32;
-    cam.transform.translation.y = -200f32;
-    commands.spawn_bundle(cam);
     commands.spawn_bundle(tilemap_bundle);
+
+    let map = Map::new(MAP_WIDTH as usize, MAP_HEIGHT as usize);
     commands.insert_resource(map);
 }
-
-fn populate_tiles(tm: &mut TileMap, m: &Map) {
-    //let mut rng = rand::thread_rng();
-    for x in 0..MAP_WIDTH {
-        for y in 0..MAP_HEIGHT {
-            set_tile(tm, x, -y, m.tile(x, y));
-        }
-    }
-}
-
-fn set_tile(tm: &mut TileMap, x: i32, y: i32, t: TileType) {
-    let si = match t {
-        TileType::Empty => SpriteIndex::Empty as u32,
-        TileType::Sky => SpriteIndex::Sky as u32,
-        TileType::Grass => SpriteIndex::Grass as u32,
-        TileType::Dirt => SpriteIndex::Dirt as u32,
-        TileType::Rock { hardness } => {
-            (SpriteIndex::Stone0 as u8 + core::cmp::min(hardness, 3)) as u32
-        }
-        TileType::Water => SpriteIndex::Water as u32,
-        _ => SpriteIndex::Border as u32,
-    };
-    tm.set_tile(
-        ivec3(x, y, 0),
-        Some(Tile {
-            sprite_index: si,
-            ..Default::default()
-        }),
-    )
-}
-
-//     let mut rng = rand::thread_rng();
-//         for y in -DEPTH..-1 {
-//             if x < WIDTH - 2 {
-//                 let t = match rng.gen_range(0..100) {
-//                     r if r < 10 => TileType::Sandstone,
-//                     r if r < 20 => TileType::Limestone,
-//                     r if r < 30 => TileType::Granite,
-//                     r if r < 35 => TileType::Bedrock,
-//                     r if r < 40 => TileType::Water,
-//                     _ => TileType::Dirt,
-//                 };
-//                 set_tile(tm, x, y, t);
-//             } else {
-//                 set_tile(tm, x, y, TileType::Dirt);
-//             }
-//         }
-//     }

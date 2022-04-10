@@ -86,10 +86,18 @@ pub fn show_elevator(elev: Res<Elevator>, mut query: Query<&mut TileMap>) {
 
 pub fn update_tilemap(player: Res<Player>, map: Res<Map>, mut query: Query<&mut TileMap>) {
     for mut tm in query.iter_mut() {
-        for x in player.x - 1..=player.x + 1 {
-            for y in player.y - 1..=player.y + 1 {
-                set_tile(&mut tm, x, -y, map.tile(x, y));
+        if tm.chunks.is_empty() {
+            for x in 0..MAP_WIDTH {
+                for y in 0..MAP_HEIGHT {
+                    set_tile(&mut tm, x, -y, map.tile(x, y));
+                }
             }
+        } else {
+            for x in player.x - 1..=player.x + 1 {
+                for y in player.y - 1..=player.y + 1 {
+                    set_tile(&mut tm, x, -y, map.tile(x, y));
+                }
+            }    
         }
     }
 }
