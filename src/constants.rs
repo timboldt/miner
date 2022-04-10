@@ -14,8 +14,8 @@
 
 #![warn(clippy::all, clippy::pedantic)]
 
-pub const MAP_WIDTH: i32 = 50;
-pub const MAP_HEIGHT: i32 = 80;
+pub const MAP_WIDTH: i32 = 40;
+pub const MAP_HEIGHT: i32 = 60;
 pub const PLAYER_START_X: i32 = MAP_WIDTH - 5;
 pub const PLAYER_START_Y: i32 = SKY_HEIGHT;
 pub const MAX_ELEVATOR_DEPTH: i32 = MAP_HEIGHT - SKY_HEIGHT - 2;

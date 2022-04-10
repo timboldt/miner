@@ -118,7 +118,7 @@ impl Map {
 
         // A little scenery along the elevator shaft.
         for i in 0..=3 {
-            self.set_tile(w - 4, 20 * i + 10, TileType::Rock { hardness: i as u8 });
+            self.set_tile(w - 4, 10 * i + 10, TileType::Rock { hardness: i as u8 });
         }
     }
 }
