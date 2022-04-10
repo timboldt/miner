@@ -23,6 +23,8 @@ const ENERGY_COST: i32 = 10;
 pub struct Player {
     pub x: i32,
     pub y: i32,
+    pub target_x: i32,
+    pub target_y: i32,
     money: i32,
     energy: i32,
 }
@@ -32,6 +34,8 @@ impl Player {
         Player {
             x,
             y,
+            target_x: x,
+            target_y: y,
             money: INITIAL_MONEY,
             energy: INTIAL_ENERGY,
         }

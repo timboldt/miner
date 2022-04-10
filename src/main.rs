@@ -40,6 +40,7 @@ fn main() {
         .add_system(systems::input::camera_input)
         .add_system(systems::input::elevator_input)
         .add_system(systems::input::player_input)
+        .add_system(systems::player::move_player)
         .add_system(systems::elevator::move_elevator.with_run_criteria(FixedTimestep::step(0.1)))
         .add_system(systems::render::update_tilemap)
         .add_system(systems::render::show_player)

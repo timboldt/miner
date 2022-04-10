@@ -30,19 +30,19 @@ pub fn player_input(
 ) {
     if keyboard_input.just_pressed(KeyCode::Left) {
         if player.x > 1 {
-            player.x -= 1;
+            player.target_x = player.x - 1;
         }
     } else if keyboard_input.just_pressed(KeyCode::Right) {
         if player.x < MAP_WIDTH - 3 {
-            player.x += 1;
+            player.target_x = player.x + 1;
         }
     } else if keyboard_input.just_pressed(KeyCode::Up) {
         if player.y > SKY_HEIGHT {
-            player.y -= 1;
+            player.target_y = player.y - 1;
         }
     } else if keyboard_input.just_pressed(KeyCode::Down) {
         if player.y < MAP_HEIGHT - 2 {
-            player.y += 1;
+            player.target_y = player.y + 1;
         }
     }
     if map.tile(player.x, player.y) == TileType::Dirt {

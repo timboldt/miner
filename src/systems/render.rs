@@ -97,7 +97,7 @@ pub fn update_tilemap(player: Res<Player>, map: Res<Map>, mut query: Query<&mut 
                 for y in player.y - 1..=player.y + 1 {
                     set_tile(&mut tm, x, -y, map.tile(x, y));
                 }
-            }    
+            }
         }
     }
 }

@@ -16,4 +16,5 @@
 
 pub mod elevator;
 pub mod input;
+pub mod player;
 pub mod render;
