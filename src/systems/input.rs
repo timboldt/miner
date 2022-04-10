@@ -14,6 +14,8 @@
 
 #![warn(clippy::all, clippy::pedantic)]
 
+use crate::constants::{MAP_HEIGHT, MAP_WIDTH};
+use crate::model::map::{Map, TileType};
 use crate::model::player::Player;
 use crate::{constants::SKY_HEIGHT, model::elevator::Elevator};
 use bevy::{
@@ -21,15 +23,30 @@ use bevy::{
     render::camera::{ActiveCameras, Camera},
 };
 
-pub fn player_input(mut player: ResMut<Player>, keyboard_input: Res<Input<KeyCode>>) {
+pub fn player_input(
+    mut player: ResMut<Player>,
+    mut map: ResMut<Map>,
+    keyboard_input: Res<Input<KeyCode>>,
+) {
     if keyboard_input.just_pressed(KeyCode::Left) {
-        player.x -= 1;
+        if player.x > 1 {
+            player.x -= 1;
+        }
     } else if keyboard_input.just_pressed(KeyCode::Right) {
-        player.x += 1;
+        if player.x < MAP_WIDTH - 3 {
+            player.x += 1;
+        }
     } else if keyboard_input.just_pressed(KeyCode::Up) {
-        player.y -= 1;
+        if player.y > SKY_HEIGHT {
+            player.y -= 1;
+        }
     } else if keyboard_input.just_pressed(KeyCode::Down) {
-        player.y += 1;
+        if player.y < MAP_HEIGHT - 2 {
+            player.y += 1;
+        }
+    }
+    if map.tile(player.x, player.y) == TileType::Dirt {
+        map.set_tile(player.x, player.y, TileType::Empty);
     }
 }
 

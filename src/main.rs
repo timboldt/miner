@@ -41,6 +41,7 @@ fn main() {
         .add_system(systems::input::elevator_input)
         .add_system(systems::input::player_input)
         .add_system(systems::elevator::move_elevator.with_run_criteria(FixedTimestep::step(0.1)))
+        .add_system(systems::render::update_tilemap)
         .add_system(systems::render::show_player)
         .add_system(systems::render::show_elevator)
         .run();
@@ -56,8 +57,10 @@ fn setup(
     let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(64.0, 64.0), 10, 4);
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
 
+    let map = Map::new(MAP_WIDTH as usize, MAP_HEIGHT as usize);
+
     let mut tilemap = TileMap::default();
-    populate_tiles(&mut tilemap);
+    populate_tiles(&mut tilemap, &map);
 
     let tilemap_bundle = TileMapBundle {
         tilemap,
@@ -75,12 +78,11 @@ fn setup(
     cam.transform.translation.y = -200f32;
     commands.spawn_bundle(cam);
     commands.spawn_bundle(tilemap_bundle);
+    commands.insert_resource(map);
 }
 
-fn populate_tiles(tm: &mut TileMap) {
+fn populate_tiles(tm: &mut TileMap, m: &Map) {
     //let mut rng = rand::thread_rng();
-
-    let m: Map = Map::new(MAP_WIDTH as usize, MAP_HEIGHT as usize);
     for x in 0..MAP_WIDTH {
         for y in 0..MAP_HEIGHT {
             set_tile(tm, x, -y, m.tile(x, y));

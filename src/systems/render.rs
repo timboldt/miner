@@ -16,6 +16,7 @@
 
 use crate::constants::*;
 use crate::model::elevator::Elevator;
+use crate::model::map::{Map, TileType};
 use crate::model::player::Player;
 use bevy::{math::ivec3, prelude::*};
 use bevy_simple_tilemap::prelude::*;
@@ -81,4 +82,35 @@ pub fn show_elevator(elev: Res<Elevator>, mut query: Query<&mut TileMap>) {
             }),
         );
     }
+}
+
+pub fn update_tilemap(player: Res<Player>, map: Res<Map>, mut query: Query<&mut TileMap>) {
+    for mut tm in query.iter_mut() {
+        for x in player.x - 1..=player.x + 1 {
+            for y in player.y - 1..=player.y + 1 {
+                set_tile(&mut tm, x, -y, map.tile(x, y));
+            }
+        }
+    }
+}
+
+fn set_tile(tm: &mut TileMap, x: i32, y: i32, t: TileType) {
+    let si = match t {
+        TileType::Empty => SpriteIndex::Empty as u32,
+        TileType::Sky => SpriteIndex::Sky as u32,
+        TileType::Grass => SpriteIndex::Grass as u32,
+        TileType::Dirt => SpriteIndex::Dirt as u32,
+        TileType::Rock { hardness } => {
+            (SpriteIndex::Stone0 as u8 + core::cmp::min(hardness, 3)) as u32
+        }
+        TileType::Water => SpriteIndex::Water as u32,
+        _ => SpriteIndex::Border as u32,
+    };
+    tm.set_tile(
+        ivec3(x, y, 0),
+        Some(Tile {
+            sprite_index: si,
+            ..Default::default()
+        }),
+    )
 }
