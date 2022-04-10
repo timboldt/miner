@@ -14,6 +14,7 @@
 
 #![warn(clippy::all, clippy::pedantic)]
 
+use bevy::text::text2d_system;
 use bevy::{core::FixedTimestep, math::ivec3, prelude::*};
 
 use bevy_simple_tilemap::prelude::*;
@@ -36,7 +37,8 @@ fn main() {
         .insert_resource(Player::new(PLAYER_START_X, PLAYER_START_Y))
         .add_plugins(DefaultPlugins)
         .add_plugin(SimpleTileMapPlugin)
-        .add_startup_system(setup)
+        .add_startup_system(systems::render::setup)
+        .add_startup_system(systems::text::setup)
         .add_system(systems::input::camera_input)
         .add_system(systems::input::elevator_input)
         .add_system(systems::input::player_input)
@@ -45,35 +47,8 @@ fn main() {
         .add_system(systems::render::update_tilemap)
         .add_system(systems::render::show_player)
         .add_system(systems::render::show_elevator)
+        .add_system(systems::text::update_money)
+        .add_system(systems::text::update_energy)
         .run();
 }
 
-fn setup(
-    asset_server: Res<AssetServer>,
-    mut commands: Commands,
-    mut texture_atlases: ResMut<Assets<TextureAtlas>>,
-) {
-    // Load tilesheet texture and make a texture atlas from it
-    let texture_handle = asset_server.load("64x64_tileset.png");
-    let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(64.0, 64.0), 10, 4);
-    let texture_atlas_handle = texture_atlases.add(texture_atlas);
-
-    let mut cam = OrthographicCameraBundle::new_2d();
-    commands.spawn_bundle(cam);
-
-    let tilemap = TileMap::default();
-    let tilemap_bundle = TileMapBundle {
-        tilemap,
-        texture_atlas: texture_atlas_handle.clone(),
-        transform: Transform {
-            scale: Vec3::splat(1.0),
-            translation: Vec3::new(0.0, 0.0, 0.0),
-            ..Default::default()
-        },
-        ..Default::default()
-    };
-    commands.spawn_bundle(tilemap_bundle);
-
-    let map = Map::new(MAP_WIDTH as usize, MAP_HEIGHT as usize);
-    commands.insert_resource(map);
-}

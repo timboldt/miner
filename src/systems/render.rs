@@ -21,6 +21,36 @@ use crate::model::player::Player;
 use bevy::{math::ivec3, prelude::*};
 use bevy_simple_tilemap::prelude::*;
 
+pub fn setup(
+    asset_server: Res<AssetServer>,
+    mut commands: Commands,
+    mut texture_atlases: ResMut<Assets<TextureAtlas>>,
+) {
+    // Load tilesheet texture and make a texture atlas from it
+    let texture_handle = asset_server.load("64x64_tileset.png");
+    let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(64.0, 64.0), 10, 4);
+    let texture_atlas_handle = texture_atlases.add(texture_atlas);
+
+    let mut cam = OrthographicCameraBundle::new_2d();
+    commands.spawn_bundle(cam);
+
+    let tilemap = TileMap::default();
+    let tilemap_bundle = TileMapBundle {
+        tilemap,
+        texture_atlas: texture_atlas_handle.clone(),
+        transform: Transform {
+            scale: Vec3::splat(1.0),
+            translation: Vec3::new(0.0, 0.0, 0.0),
+            ..Default::default()
+        },
+        ..Default::default()
+    };
+    commands.spawn_bundle(tilemap_bundle);
+
+    let map = Map::new(MAP_WIDTH as usize, MAP_HEIGHT as usize);
+    commands.insert_resource(map);
+}
+
 pub fn show_player(player: Res<Player>, mut query: Query<&mut TileMap>) {
     for mut tm in query.iter_mut() {
         tm.clear_layer(PLAYER_LAYER);

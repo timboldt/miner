@@ -54,6 +54,7 @@ pub fn player_input(
         }
     } else if keyboard_input.just_pressed(KeyCode::L) {
         if player.x < ELEVATOR_SHAFT_X && map.tile(player.x, player.y) == TileType::Empty {
+            player.use_energy(5);
             map.set_tile(player.x, player.y, TileType::Ladder);
         }
     }

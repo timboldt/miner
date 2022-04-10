@@ -39,6 +39,7 @@ pub fn move_player(mut player: ResMut<Player>, mut map: ResMut<Map>, elev: Res<E
     // Change the target tile, if needed.
     match map.tile(player.target_x, player.target_y) {
         TileType::Dirt => {
+            player.use_energy(1);
             match thread_rng().gen_range(0..50) {
                 0..=9 => {
                     // Rock.
@@ -97,7 +98,7 @@ pub fn move_player(mut player: ResMut<Player>, mut map: ResMut<Map>, elev: Res<E
         }
         TileType::Treasure { value } => {
             // Collect the treasure.
-            player.receive_money((1 << value) * TREASURE_BASE_VALUE);
+            player.receive_money((1 << (value*2)) * TREASURE_BASE_VALUE);
             map.set_tile(player.target_x, player.target_y, TileType::Empty);
             player.x = player.target_x;
             player.y = player.target_y;
@@ -125,5 +126,10 @@ pub fn move_player(mut player: ResMut<Player>, mut map: ResMut<Map>, elev: Res<E
             player.target_x = player.x;
             player.target_y = player.y;
         }
+    }
+
+    // Cash in and recharge.
+    if player.x == MAP_WIDTH - 9 && player.y == SKY_HEIGHT {
+        player.refill_energy();
     }
 }
