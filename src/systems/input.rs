@@ -20,8 +20,19 @@ use bevy::{
     render::camera::{ActiveCameras, Camera},
 };
 
-pub fn player_input(
-    mut player: ResMut<Player>,
+pub fn player_input(mut player: ResMut<Player>, keyboard_input: Res<Input<KeyCode>>) {
+    if keyboard_input.just_pressed(KeyCode::Left) {
+        player.x -= 1;
+    } else if keyboard_input.just_pressed(KeyCode::Right) {
+        player.x += 1;
+    } else if keyboard_input.just_pressed(KeyCode::Up) {
+        player.y -= 1;
+    } else if keyboard_input.just_pressed(KeyCode::Down) {
+        player.y += 1;
+    }
+}
+
+pub fn camera_input(
     active_cameras: Res<ActiveCameras>,
     mut camera_transform_query: Query<(&mut Transform,), With<Camera>>,
     keyboard_input: Res<Input<KeyCode>>,
@@ -39,9 +50,9 @@ pub fn player_input(
             }
 
             if keyboard_input.just_pressed(KeyCode::A) {
-                player.x -= 1;
+                tf.translation.x += MOVE_SPEED * time.delta_seconds();
             } else if keyboard_input.just_pressed(KeyCode::D) {
-                player.x += 1;
+                tf.translation.x -= MOVE_SPEED * time.delta_seconds();
             }
 
             if keyboard_input.pressed(KeyCode::S) {

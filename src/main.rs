@@ -37,6 +37,7 @@ fn main() {
         .add_plugins(DefaultPlugins)
         .add_plugin(SimpleTileMapPlugin)
         .add_startup_system(setup)
+        .add_system(systems::input::camera_input)
         .add_system(systems::input::player_input)
         .add_system(systems::render_player::show_player)
         .run();
