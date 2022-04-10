@@ -14,72 +14,32 @@
 
 #![warn(clippy::all, clippy::pedantic)]
 
-use bevy::{
-    math::ivec3,
-    prelude::*,
-    render::camera::{ActiveCameras, Camera},
-};
+use bevy::{math::ivec3, prelude::*};
 
 use bevy_simple_tilemap::prelude::*;
-//use rand::Rng;
+
+mod constants;
+use constants::*;
 
 mod model;
 use model::elevator::Elevator;
 use model::map::{Map, TileType};
 use model::player::Player;
 
-fn main() {
-    // TODO: Move this elsewhere.
-    let _x = Elevator::new(42);
-    let _p: Player = Player::new(48, -2);
+mod systems;
 
+fn main() {
     App::new()
         // Disable MSAA, as it produces weird rendering artifacts
         .insert_resource(Msaa { samples: 1 })
+        .insert_resource(Elevator::new(MAX_ELEVATOR_DEPTH as u32))
+        .insert_resource(Player::new(PLAYER_START_X, PLAYER_START_Y))
         .add_plugins(DefaultPlugins)
         .add_plugin(SimpleTileMapPlugin)
         .add_startup_system(setup)
-        .add_system(input_system)
+        .add_system(systems::input::player_input)
+        .add_system(systems::render_player::show_player)
         .run();
-}
-
-fn input_system(
-    active_cameras: Res<ActiveCameras>,
-    mut camera_transform_query: Query<(&mut Transform,), With<Camera>>,
-    mut tilemap_visible_query: Query<&mut Visibility, With<TileMap>>,
-    keyboard_input: Res<Input<KeyCode>>,
-    time: Res<Time>,
-) {
-    const MOVE_SPEED: f32 = 1000.0;
-    const ZOOM_SPEED: f32 = 10.0;
-
-    if let Some(active_camera_entity) = active_cameras.get("camera_2d").and_then(|ac| ac.entity) {
-        if let Ok((mut tf,)) = camera_transform_query.get_mut(active_camera_entity) {
-            if keyboard_input.pressed(KeyCode::X) {
-                tf.scale -= Vec3::splat(ZOOM_SPEED) * time.delta_seconds();
-            } else if keyboard_input.pressed(KeyCode::Z) {
-                tf.scale += Vec3::splat(ZOOM_SPEED) * time.delta_seconds();
-            }
-
-            if keyboard_input.pressed(KeyCode::A) {
-                tf.translation.x -= MOVE_SPEED * time.delta_seconds();
-            } else if keyboard_input.pressed(KeyCode::D) {
-                tf.translation.x += MOVE_SPEED * time.delta_seconds();
-            }
-
-            if keyboard_input.pressed(KeyCode::S) {
-                tf.translation.y -= MOVE_SPEED * time.delta_seconds();
-            } else if keyboard_input.pressed(KeyCode::W) {
-                tf.translation.y += MOVE_SPEED * time.delta_seconds();
-            }
-
-            if keyboard_input.just_pressed(KeyCode::V) {
-                // Toggle visibility
-                let mut visible = tilemap_visible_query.iter_mut().next().unwrap();
-                visible.is_visible = !visible.is_visible;
-            }
-        }
-    }
 }
 
 fn setup(
@@ -114,21 +74,18 @@ fn setup(
 }
 
 fn populate_tiles(tm: &mut TileMap) {
-    const HEIGHT: i32 = 30;
-    const WIDTH: i32 = 50;
-
     //let mut rng = rand::thread_rng();
 
-    let m: Map = Map::new(WIDTH as usize, HEIGHT as usize);
-    for x in 0..WIDTH {
-        for y in 0..HEIGHT {
+    let m: Map = Map::new(MAP_WIDTH as usize, MAP_HEIGHT as usize);
+    for x in 0..MAP_WIDTH {
+        for y in 0..MAP_HEIGHT {
             set_tile(tm, x, -y, m.tile(x, y));
         }
     }
 
     // Person in layer 1.
     tm.set_tile(
-        ivec3(WIDTH - 3, -5, 1),
+        ivec3(MAP_WIDTH - 3, -5, 1),
         Some(Tile {
             sprite_index: SpriteIndex::Person as u32,
             ..Default::default()
@@ -137,68 +94,47 @@ fn populate_tiles(tm: &mut TileMap) {
 
     // Elevator in layer 2.
     tm.set_tile(
-        ivec3(WIDTH - 3, -5, 2),
+        ivec3(MAP_WIDTH - 3, -5, 2),
         Some(Tile {
             sprite_index: SpriteIndex::Elevator as u32,
             ..Default::default()
         }),
     );
     tm.set_tile(
-        ivec3(WIDTH - 3, -4, 2),
+        ivec3(MAP_WIDTH - 3, -4, 2),
         Some(Tile {
             sprite_index: SpriteIndex::ElevatorCable as u32,
             ..Default::default()
         }),
     );
     tm.set_tile(
-        ivec3(WIDTH - 3, -3, 2),
+        ivec3(MAP_WIDTH - 3, -3, 2),
         Some(Tile {
             sprite_index: SpriteIndex::ElevatorCable as u32,
             ..Default::default()
         }),
     );
     tm.set_tile(
-        ivec3(WIDTH - 3, -2, 2),
+        ivec3(MAP_WIDTH - 3, -2, 2),
         Some(Tile {
             sprite_index: SpriteIndex::ElevatorHook as u32,
             ..Default::default()
         }),
     );
     tm.set_tile(
-        ivec3(WIDTH - 2, -2, 2),
+        ivec3(MAP_WIDTH - 2, -2, 2),
         Some(Tile {
             sprite_index: SpriteIndex::ElevatorTowerTop as u32,
             ..Default::default()
         }),
     );
     tm.set_tile(
-        ivec3(WIDTH - 2, -3, 2),
+        ivec3(MAP_WIDTH - 2, -3, 2),
         Some(Tile {
             sprite_index: SpriteIndex::ElevatorTowerBottom as u32,
             ..Default::default()
         }),
     );
-}
-
-enum SpriteIndex {
-    Empty = 0,
-    Dirt,
-    Stone0,
-    _Stone1,
-    _Stone2,
-    _Stone3,
-    Grass,
-    Water,
-    Border,
-    Sky,
-
-    Person = 10,
-
-    Elevator = 30,
-    ElevatorHook = 20,
-    ElevatorTowerTop = 21,
-    ElevatorTowerBottom = 31,
-    ElevatorCable = 32,
 }
 
 fn set_tile(tm: &mut TileMap, x: i32, y: i32, t: TileType) {

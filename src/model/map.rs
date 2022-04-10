@@ -14,19 +14,19 @@
 
 #![warn(clippy::all, clippy::pedantic)]
 
-pub const SKY_HEIGHT: i32 = 3;
-const GRASS_LEVEL: i32 = SKY_HEIGHT + 1;
+use crate::constants::*;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum TileType {
-    Void,
     Border,
-    Empty,
-    Sky,
-    Grass,
     Dirt,
+    Empty,
+    Grass,
+    Ladder,
     Rock { hardness: u8 },
+    Sky,
     Treasure { value: u8 },
+    Void,
     Water,
 }
 
@@ -132,10 +132,13 @@ mod tests {
         assert_eq!(TileType::Dirt, m.tile(1, GRASS_LEVEL + 1));
         assert_eq!(TileType::Border, m.tile(29, 19));
         assert_eq!(TileType::Void, m.tile(30, 20));
+    }
 
-        // assert_eq!(4, p.y);
-        // assert_eq!(1000, p.money());
-        // assert_eq!(100, p.energy());
-        // assert_eq!(false, p.is_dead());
+    #[test]
+    fn set_tile_works() {
+        let mut m = Map::new(30, 20);
+        assert_eq!(TileType::Dirt, m.tile(2, 10));
+        m.set_tile(2, 10, TileType::Rock { hardness: 2 });
+        assert_eq!(TileType::Rock { hardness: 2 }, m.tile(2, 10));
     }
 }
