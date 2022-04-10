@@ -35,8 +35,6 @@ pub fn show_player(player: Res<Player>, mut query: Query<&mut TileMap>) {
 }
 
 pub fn show_elevator(elev: Res<Elevator>, mut query: Query<&mut TileMap>) {
-    const ELEVATOR_SHAFT_X: i32 = MAP_WIDTH - 3;
-
     for mut tm in query.iter_mut() {
         tm.clear_layer(ELEVATOR_LAYER);
 

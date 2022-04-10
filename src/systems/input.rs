@@ -14,8 +14,8 @@
 
 #![warn(clippy::all, clippy::pedantic)]
 
-use crate::model::elevator::Elevator;
 use crate::model::player::Player;
+use crate::{constants::SKY_HEIGHT, model::elevator::Elevator};
 use bevy::{
     prelude::*,
     render::camera::{ActiveCameras, Camera},
@@ -33,14 +33,19 @@ pub fn player_input(mut player: ResMut<Player>, keyboard_input: Res<Input<KeyCod
     }
 }
 
-pub fn elevator_input(mut elev: ResMut<Elevator>, keyboard_input: Res<Input<KeyCode>>) {
+pub fn elevator_input(
+    mut elev: ResMut<Elevator>,
+    player: Res<Player>,
+    keyboard_input: Res<Input<KeyCode>>,
+) {
     let depth = elev.depth();
     if keyboard_input.just_pressed(KeyCode::Period) {
         elev.set_target_depth(depth + 1);
     } else if keyboard_input.just_pressed(KeyCode::Comma) && depth > 0 {
         elev.set_target_depth(depth - 1);
+    } else if keyboard_input.just_pressed(KeyCode::Space) {
+        elev.set_target_depth((player.y - SKY_HEIGHT) as u32);
     }
-    elev.move_towards_target();
 }
 
 pub fn camera_input(

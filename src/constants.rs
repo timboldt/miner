@@ -19,6 +19,7 @@ pub const MAP_HEIGHT: i32 = 30;
 pub const PLAYER_START_X: i32 = MAP_WIDTH - 5;
 pub const PLAYER_START_Y: i32 = SKY_HEIGHT;
 pub const MAX_ELEVATOR_DEPTH: i32 = MAP_HEIGHT - SKY_HEIGHT - 2;
+pub const ELEVATOR_SHAFT_X: i32 = MAP_WIDTH - 3;
 pub const SKY_HEIGHT: i32 = 3;
 pub const GRASS_LEVEL: i32 = SKY_HEIGHT + 1;
 

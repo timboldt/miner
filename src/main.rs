@@ -14,7 +14,7 @@
 
 #![warn(clippy::all, clippy::pedantic)]
 
-use bevy::{math::ivec3, prelude::*};
+use bevy::{core::FixedTimestep, math::ivec3, prelude::*};
 
 use bevy_simple_tilemap::prelude::*;
 
@@ -40,6 +40,7 @@ fn main() {
         .add_system(systems::input::camera_input)
         .add_system(systems::input::elevator_input)
         .add_system(systems::input::player_input)
+        .add_system(systems::elevator::move_elevator.with_run_criteria(FixedTimestep::step(0.1)))
         .add_system(systems::render::show_player)
         .add_system(systems::render::show_elevator)
         .run();
