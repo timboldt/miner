@@ -19,6 +19,7 @@ use crate::model::elevator::Elevator;
 use crate::model::map::{Map, TileType};
 use crate::model::player::Player;
 use bevy::prelude::*;
+use rand::prelude::*;
 
 pub fn move_player(mut player: ResMut<Player>, mut map: ResMut<Map>, elev: Res<Elevator>) {
     let depth = elev.depth();
@@ -35,20 +36,71 @@ pub fn move_player(mut player: ResMut<Player>, mut map: ResMut<Map>, elev: Res<E
         player.target_y = player.y + 1;
     }
 
+    // Change the target tile, if needed.
     match map.tile(player.target_x, player.target_y) {
-        TileType::Dirt => {
+        TileType::Dirt => match thread_rng().gen_range(0..100) {
+            1..=10 => map.set_tile(
+                player.target_x,
+                player.target_y,
+                TileType::Rock { hardness: 0 },
+            ),
+            11..=16 => map.set_tile(
+                player.target_x,
+                player.target_y,
+                TileType::Rock { hardness: 1 },
+            ),
+            21..=24 => map.set_tile(
+                player.target_x,
+                player.target_y,
+                TileType::Rock { hardness: 2 },
+            ),
+            31..=32 => map.set_tile(
+                player.target_x,
+                player.target_y,
+                TileType::Rock { hardness: 3 },
+            ),
+            40 => map.set_tile(player.target_x, player.target_y, TileType::Water),
+            51..=55 => map.set_tile(
+                player.target_x,
+                player.target_y,
+                TileType::Treasure { value: 0 },
+            ),
+            61..=62 => map.set_tile(
+                player.target_x,
+                player.target_y,
+                TileType::Treasure { value: 1 },
+            ),
+            71 => map.set_tile(
+                player.target_x,
+                player.target_y,
+                TileType::Treasure { value: 2 },
+            ),
+            _ => map.set_tile(player.target_x, player.target_y, TileType::Empty),
+        },
+        TileType::Rock { .. } => {
+            // Don't allow chiselling rock yet.
+        }
+        TileType::Treasure { value } => {
+            // Collect the treasure.
+            player.receive_money((1 << value) * TREASURE_BASE_VALUE);
             map.set_tile(player.target_x, player.target_y, TileType::Empty);
             player.x = player.target_x;
             player.y = player.target_y;
         }
+        _ => {}
+    }
+
+    // Move towards target, if possible.
+    match map.tile(player.target_x, player.target_y) {
         TileType::Empty | TileType::Ladder | TileType::Sky => {
+            // Allow the move.
             player.x = player.target_x;
             player.y = player.target_y;
         }
-        TileType::Rock { .. } => {}
-        TileType::Treasure { .. } => {}
-        TileType::Border | TileType::Void | TileType::Grass | TileType::Water => {}
+        _ => {
+            // If we haven't moved there yet, we aren't going to.
+            player.target_x = player.x;
+            player.target_y = player.y;
+        }
     }
-    player.target_x = player.x;
-    player.target_y = player.y;
 }

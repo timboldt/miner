@@ -112,6 +112,9 @@ fn set_tile(tm: &mut TileMap, x: i32, y: i32, t: TileType) {
         TileType::Rock { hardness } => {
             (SpriteIndex::Stone0 as u8 + core::cmp::min(hardness, 3)) as u32
         }
+        TileType::Treasure { value } => {
+            (SpriteIndex::Treasure0 as u8 + core::cmp::min(value, 2)) as u32
+        }
         TileType::Water => SpriteIndex::Water as u32,
         _ => SpriteIndex::Border as u32,
     };

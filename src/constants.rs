@@ -26,20 +26,23 @@ pub const GRASS_LEVEL: i32 = SKY_HEIGHT + 1;
 pub const PLAYER_LAYER: i32 = 1;
 pub const ELEVATOR_LAYER: i32 = 2;
 
+pub const TREASURE_BASE_VALUE: i32 = 100;
+
 pub enum SpriteIndex {
     Empty = 0,
     Dirt,
-    Stone0,
-    _Stone1,
-    _Stone2,
-    _Stone3,
-    Grass,
+
+    Stone0 = 2,
+
+    Grass = 6,
     Water,
     Border,
     Sky,
 
     Person = 10,
     Ladder,
+
+    Treasure0 = 17,
 
     Elevator = 30,
     ElevatorHook = 20,
