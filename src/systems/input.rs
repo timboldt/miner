@@ -14,7 +14,7 @@
 
 #![warn(clippy::all, clippy::pedantic)]
 
-use crate::constants::{MAP_HEIGHT, MAP_WIDTH};
+use crate::constants::*;
 use crate::model::map::{Map, TileType};
 use crate::model::player::Player;
 use crate::{constants::SKY_HEIGHT, model::elevator::Elevator};
@@ -26,8 +26,12 @@ use bevy::{
 pub fn player_input(
     mut player: ResMut<Player>,
     mut map: ResMut<Map>,
+    mut elev: ResMut<Elevator>,
     keyboard_input: Res<Input<KeyCode>>,
 ) {
+    let depth = elev.depth();
+    let player_in_elevator = player.x == ELEVATOR_SHAFT_X && (player.y - SKY_HEIGHT) == depth;
+
     if keyboard_input.just_pressed(KeyCode::Left) {
         if player.x > 1 {
             player.target_x = player.x - 1;
@@ -37,11 +41,15 @@ pub fn player_input(
             player.target_x = player.x + 1;
         }
     } else if keyboard_input.just_pressed(KeyCode::Up) {
-        if player.y > SKY_HEIGHT {
+        if player_in_elevator {
+            elev.set_target_depth(depth - 1);
+        } else if player.y > SKY_HEIGHT {
             player.target_y = player.y - 1;
         }
     } else if keyboard_input.just_pressed(KeyCode::Down) {
-        if player.y < MAP_HEIGHT - 2 {
+        if player_in_elevator {
+            elev.set_target_depth(depth + 1);
+        } else if player.y < MAP_HEIGHT - 2 {
             player.target_y = player.y + 1;
         }
     }
@@ -55,13 +63,8 @@ pub fn elevator_input(
     player: Res<Player>,
     keyboard_input: Res<Input<KeyCode>>,
 ) {
-    let depth = elev.depth();
-    if keyboard_input.just_pressed(KeyCode::Period) {
-        elev.set_target_depth(depth + 1);
-    } else if keyboard_input.just_pressed(KeyCode::Comma) && depth > 0 {
-        elev.set_target_depth(depth - 1);
-    } else if keyboard_input.just_pressed(KeyCode::Space) {
-        elev.set_target_depth((player.y - SKY_HEIGHT) as u32);
+    if keyboard_input.just_pressed(KeyCode::Space) {
+        elev.set_target_depth(player.y - SKY_HEIGHT);
     }
 }
 

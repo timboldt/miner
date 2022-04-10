@@ -32,7 +32,7 @@ fn main() {
     App::new()
         // Disable MSAA, as it produces weird rendering artifacts
         .insert_resource(Msaa { samples: 1 })
-        .insert_resource(Elevator::new(MAX_ELEVATOR_DEPTH as u32))
+        .insert_resource(Elevator::new(MAX_ELEVATOR_DEPTH))
         .insert_resource(Player::new(PLAYER_START_X, PLAYER_START_Y))
         .add_plugins(DefaultPlugins)
         .add_plugin(SimpleTileMapPlugin)

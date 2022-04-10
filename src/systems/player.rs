@@ -22,8 +22,7 @@ use bevy::prelude::*;
 
 pub fn move_player(mut player: ResMut<Player>, mut map: ResMut<Map>, elev: Res<Elevator>) {
     let depth = elev.depth();
-    let player_in_elevator =
-        player.x == ELEVATOR_SHAFT_X && (player.y - SKY_HEIGHT) as u32 == depth;
+    let player_in_elevator = player.x == ELEVATOR_SHAFT_X && (player.y - SKY_HEIGHT) == depth;
 
     if player_in_elevator {
         player.target_y = player.y;

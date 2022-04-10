@@ -16,14 +16,15 @@
 
 pub struct Elevator {
     // The depth is the current location. Zero is ground level.
-    depth: u32,
-    max_depth: u32,
+    depth: i32,
+    max_depth: i32,
     // The target depth is the called location.
-    target_depth: u32,
+    target_depth: i32,
 }
 
 impl Elevator {
-    pub fn new(max_depth: u32) -> Self {
+    pub fn new(max_depth: i32) -> Self {
+        assert!(max_depth >= 0);
         Elevator {
             depth: 0,
             max_depth,
@@ -31,15 +32,15 @@ impl Elevator {
         }
     }
 
-    pub fn depth(&self) -> u32 {
+    pub fn depth(&self) -> i32 {
         self.depth
     }
 
-    pub fn set_target_depth(&mut self, target: u32) {
-        self.target_depth = core::cmp::min(target, self.max_depth);
+    pub fn set_target_depth(&mut self, target: i32) {
+        self.target_depth = core::cmp::max(0, core::cmp::min(target, self.max_depth));
     }
 
-    pub fn move_towards_target(&mut self) -> u32 {
+    pub fn move_towards_target(&mut self) -> i32 {
         if self.target_depth < self.depth {
             self.depth -= 1;
         } else if self.target_depth > self.depth {
@@ -56,7 +57,7 @@ mod tests {
     #[test]
     fn init() {
         let elev = Elevator::new(100);
-        assert_eq!(0u32, elev.depth());
+        assert_eq!(0, elev.depth());
     }
 
     #[test]
@@ -64,37 +65,37 @@ mod tests {
         let mut elev = Elevator::new(10);
 
         elev.set_target_depth(2);
-        assert_eq!(0u32, elev.depth());
-        assert_eq!(1u32, elev.move_towards_target());
-        assert_eq!(2u32, elev.move_towards_target());
-        assert_eq!(2u32, elev.move_towards_target());
-        assert_eq!(2u32, elev.depth());
+        assert_eq!(0, elev.depth());
+        assert_eq!(1, elev.move_towards_target());
+        assert_eq!(2, elev.move_towards_target());
+        assert_eq!(2, elev.move_towards_target());
+        assert_eq!(2, elev.depth());
 
         elev.set_target_depth(0);
-        assert_eq!(2u32, elev.depth());
-        assert_eq!(1u32, elev.move_towards_target());
-        assert_eq!(0u32, elev.move_towards_target());
-        assert_eq!(0u32, elev.move_towards_target());
-        assert_eq!(0u32, elev.depth());
+        assert_eq!(2, elev.depth());
+        assert_eq!(1, elev.move_towards_target());
+        assert_eq!(0, elev.move_towards_target());
+        assert_eq!(0, elev.move_towards_target());
+        assert_eq!(0, elev.depth());
 
         elev.set_target_depth(100);
-        assert_eq!(0u32, elev.depth());
+        assert_eq!(0, elev.depth());
         // It moves towards the target depth.
         for i in 1..=10 {
-            assert_eq!(i as u32, elev.move_towards_target());
+            assert_eq!(i, elev.move_towards_target());
         }
         // But it doesn't move beyond the max depth.
-        assert_eq!(10u32, elev.move_towards_target());
-        assert_eq!(10u32, elev.move_towards_target());
-        assert_eq!(10u32, elev.depth());
+        assert_eq!(10, elev.move_towards_target());
+        assert_eq!(10, elev.move_towards_target());
+        assert_eq!(10, elev.depth());
     }
 
     #[test]
     fn null_range() {
         let mut elev = Elevator::new(0);
         elev.set_target_depth(2);
-        assert_eq!(0u32, elev.depth());
-        assert_eq!(0u32, elev.move_towards_target());
-        assert_eq!(0u32, elev.depth());
+        assert_eq!(0, elev.depth());
+        assert_eq!(0, elev.move_towards_target());
+        assert_eq!(0, elev.depth());
     }
 }
