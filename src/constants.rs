@@ -44,6 +44,11 @@ pub enum SpriteIndex {
 
     Treasure0 = 17,
 
+    BankTopLeft = 23,
+    BankTopRight,
+    BankBottomLeft = 33,
+    BankBottomRight,
+
     Elevator = 30,
     ElevatorHook = 20,
     ElevatorTowerTop = 21,
