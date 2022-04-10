@@ -93,8 +93,8 @@ pub fn update_tilemap(player: Res<Player>, map: Res<Map>, mut query: Query<&mut 
                 }
             }
         } else {
-            for x in player.x - 1..=player.x + 1 {
-                for y in player.y - 1..=player.y + 1 {
+            for x in player.x - 10..=player.x + 10 {
+                for y in player.y - 10..=player.y + 10 {
                     set_tile(&mut tm, x, -y, map.tile(x, y));
                 }
             }
@@ -134,6 +134,9 @@ pub fn update_tilemap(player: Res<Player>, map: Res<Map>, mut query: Query<&mut 
 }
 
 fn set_tile(tm: &mut TileMap, x: i32, y: i32, t: TileType) {
+    if t == TileType::Void {
+        return;
+    }
     let si = match t {
         TileType::Empty => SpriteIndex::Empty as u32,
         TileType::Sky => SpriteIndex::Sky as u32,

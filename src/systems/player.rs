@@ -41,6 +41,7 @@ pub fn move_player(mut player: ResMut<Player>, mut map: ResMut<Map>, elev: Res<E
         TileType::Dirt => {
             match thread_rng().gen_range(0..50) {
                 0..=9 => {
+                    // Rock.
                     map.set_tile(
                         player.target_x,
                         player.target_y,
@@ -51,6 +52,7 @@ pub fn move_player(mut player: ResMut<Player>, mut map: ResMut<Map>, elev: Res<E
                     );
                 }
                 10..=12 => {
+                    // Treasure.
                     map.set_tile(
                         player.target_x,
                         player.target_y,
@@ -60,11 +62,32 @@ pub fn move_player(mut player: ResMut<Player>, mut map: ResMut<Map>, elev: Res<E
                     );
                 }
                 20 => {
-                    map.set_tile(player.target_x, player.target_y, TileType::Water);
+                    // Flooding.
+                    for x in (player.target_x - 5)..=(player.target_x + 5) {
+                        for y in (player.target_y - 5)..=(player.target_y + 5) {
+                            if thread_rng().gen_range(0..100) < 10
+                                && (map.tile(x, y) == TileType::Empty || map.tile(x, y) == TileType::Dirt)
+                                && !(x == player.x && y == player.y)
+                                && x < ELEVATOR_SHAFT_X
+                            {
+                                map.set_tile(x, y, TileType::Water);
+                            }
+                        }
+                    }
                 }
                 21 => {
-                    // TODO: cave-in
-                    map.set_tile(player.target_x, player.target_y, TileType::Empty);
+                    // Cave-in.
+                    for x in (player.target_x - 5)..=(player.target_x + 5) {
+                        for y in (player.target_y - 5)..=(player.target_y + 5) {
+                            if thread_rng().gen_range(0..100) < 50
+                                && (map.tile(x, y) == TileType::Empty || map.tile(x, y) == TileType::Ladder)
+                                && !(x == player.x && y == player.y)
+                                && x < ELEVATOR_SHAFT_X
+                            {
+                                map.set_tile(x, y, TileType::Dirt);
+                            }
+                        }
+                    }
                 }
                 _ => map.set_tile(player.target_x, player.target_y, TileType::Empty),
             }
