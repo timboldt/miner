@@ -25,13 +25,30 @@ pub fn move_player(mut player: ResMut<Player>, mut map: ResMut<Map>, elev: Res<E
     let player_in_elevator = player.x == ELEVATOR_SHAFT_X && (player.y - SKY_HEIGHT) == depth;
 
     if player_in_elevator {
+        // Let the elevator move us instead.
         player.target_y = player.y;
+    } else if map.tile(player.x, player.y + 1) == TileType::Empty
+        && map.tile(player.x, player.y) != TileType::Ladder
+    {
+        // Fall down.
+        player.target_x = player.x;
+        player.target_y = player.y + 1;
     }
 
-    player.x = player.target_x;
-    player.y = player.target_y;
-
-    if map.tile(player.x, player.y) == TileType::Dirt {
-        map.set_tile(player.x, player.y, TileType::Empty);
+    match map.tile(player.target_x, player.target_y) {
+        TileType::Dirt => {
+            map.set_tile(player.target_x, player.target_y, TileType::Empty);
+            player.x = player.target_x;
+            player.y = player.target_y;
+        }
+        TileType::Empty | TileType::Ladder | TileType::Sky => {
+            player.x = player.target_x;
+            player.y = player.target_y;
+        }
+        TileType::Rock { .. } => {}
+        TileType::Treasure { .. } => {}
+        TileType::Border | TileType::Void | TileType::Grass | TileType::Water => {}
     }
+    player.target_x = player.x;
+    player.target_y = player.y;
 }

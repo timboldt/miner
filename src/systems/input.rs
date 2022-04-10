@@ -15,9 +15,9 @@
 #![warn(clippy::all, clippy::pedantic)]
 
 use crate::constants::*;
+use crate::model::elevator::Elevator;
 use crate::model::map::{Map, TileType};
 use crate::model::player::Player;
-use crate::{constants::SKY_HEIGHT, model::elevator::Elevator};
 use bevy::{
     prelude::*,
     render::camera::{ActiveCameras, Camera},
@@ -52,9 +52,10 @@ pub fn player_input(
         } else if player.y < MAP_HEIGHT - 2 {
             player.target_y = player.y + 1;
         }
-    }
-    if map.tile(player.x, player.y) == TileType::Dirt {
-        map.set_tile(player.x, player.y, TileType::Empty);
+    } else if keyboard_input.just_pressed(KeyCode::L) {
+        if player.x < ELEVATOR_SHAFT_X && map.tile(player.x, player.y) == TileType::Empty {
+            map.set_tile(player.x, player.y, TileType::Ladder);
+        }
     }
 }
 

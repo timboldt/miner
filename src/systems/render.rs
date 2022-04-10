@@ -108,6 +108,7 @@ fn set_tile(tm: &mut TileMap, x: i32, y: i32, t: TileType) {
         TileType::Sky => SpriteIndex::Sky as u32,
         TileType::Grass => SpriteIndex::Grass as u32,
         TileType::Dirt => SpriteIndex::Dirt as u32,
+        TileType::Ladder => SpriteIndex::Ladder as u32,
         TileType::Rock { hardness } => {
             (SpriteIndex::Stone0 as u8 + core::cmp::min(hardness, 3)) as u32
         }

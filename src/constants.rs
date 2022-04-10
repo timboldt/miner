@@ -39,6 +39,7 @@ pub enum SpriteIndex {
     Sky,
 
     Person = 10,
+    Ladder,
 
     Elevator = 30,
     ElevatorHook = 20,
