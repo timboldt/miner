@@ -90,6 +90,14 @@ pub fn move_player(mut player: ResMut<Player>, mut map: ResMut<Map>, elev: Res<E
         _ => {}
     }
 
+    // You can't climb up in thin air.
+    if !player_in_elevator
+        && map.tile(player.x, player.y) == TileType::Empty
+        && player.target_y < player.y
+    {
+        player.target_y = player.y;
+    }
+
     // Move towards target, if possible.
     match map.tile(player.target_x, player.target_y) {
         TileType::Empty | TileType::Ladder | TileType::Sky => {
