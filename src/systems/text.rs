@@ -64,7 +64,7 @@ pub fn setup(
         })
         .insert(MoneyText);
 
-        commands
+    commands
         .spawn_bundle(TextBundle {
             style: Style {
                 align_self: AlignSelf::FlexEnd,

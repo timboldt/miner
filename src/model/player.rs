@@ -65,8 +65,12 @@ impl Player {
         }
     }
 
-    pub fn use_energy(&mut self, e: i32) {
-        self.energy -= e;
+    pub fn use_energy(&mut self, e: i32) -> bool {
+        let ok = self.energy >= e;
+        if ok {
+            self.energy -= e;
+        }
+        ok
     }
 
     pub fn is_dead(&self) -> bool {
@@ -116,7 +120,7 @@ mod tests {
         assert_eq!(MAX_ENERGY, p.energy());
         assert_eq!(false, p.is_dead());
 
-        p.use_energy(p.energy() / 2);
+        assert_eq!(true, p.use_energy(p.energy() / 2));
         assert_eq!(MAX_ENERGY / 2, p.energy());
         assert_eq!(false, p.is_dead());
 
@@ -124,17 +128,17 @@ mod tests {
         assert_eq!(MAX_ENERGY, p.energy());
         assert_eq!(false, p.is_dead());
 
-        p.use_energy(MAX_ENERGY / 2);
+        assert_eq!(true, p.use_energy(MAX_ENERGY / 2));
         assert_eq!(MAX_ENERGY / 2, p.energy());
         assert_eq!(false, p.is_dead());
 
-        p.use_energy(MAX_ENERGY / 2);
+        assert_eq!(true, p.use_energy(MAX_ENERGY / 2));
         assert_eq!(0, p.energy());
         assert_eq!(false, p.is_dead());
 
-        p.use_energy(1);
-        assert_eq!(-1, p.energy());
-        assert_eq!(true, p.is_dead());
+        assert_eq!(false, p.use_energy(1));
+        assert_eq!(0, p.energy());
+        assert_eq!(false, p.is_dead());
     }
 
     #[test]
@@ -142,13 +146,13 @@ mod tests {
         let mut p = Player::new(0, 0);
 
         let m1 = p.money();
-        p.use_energy(p.energy());
+        assert_eq!(true, p.use_energy(p.energy()));
         assert_eq!(m1, p.money());
         p.refill_energy();
         assert_eq!(m1 - p.energy() * ENERGY_COST, p.money());
 
         p.pay_money(p.money());
-        p.use_energy(p.energy());
+        assert_eq!(true, p.use_energy(p.energy()));
         p.receive_money(2 * ENERGY_COST);
         p.refill_energy();
         assert_eq!(2, p.energy());

@@ -129,7 +129,7 @@ mod tests {
 
     #[test]
     fn init_works() {
-        let m = Map::new(30, 20);
+        let m = Map::new(30, 50);
         assert_eq!(TileType::Void, m.tile(-1, -1));
         assert_eq!(TileType::Border, m.tile(0, 0));
         assert_eq!(TileType::Sky, m.tile(1, 1));
@@ -141,7 +141,7 @@ mod tests {
 
     #[test]
     fn set_tile_works() {
-        let mut m = Map::new(30, 20);
+        let mut m = Map::new(30, 50);
         assert_eq!(TileType::Dirt, m.tile(2, 10));
         m.set_tile(2, 10, TileType::Rock { hardness: 2 });
         assert_eq!(TileType::Rock { hardness: 2 }, m.tile(2, 10));

@@ -39,58 +39,62 @@ pub fn move_player(mut player: ResMut<Player>, mut map: ResMut<Map>, elev: Res<E
     // Change the target tile, if needed.
     match map.tile(player.target_x, player.target_y) {
         TileType::Dirt => {
-            player.use_energy(1);
-            match thread_rng().gen_range(0..50) {
-                0..=9 => {
-                    // Rock.
-                    map.set_tile(
-                        player.target_x,
-                        player.target_y,
-                        TileType::Rock {
-                            hardness: ((thread_rng().gen_range(0..50) + player.target_y) / 25)
-                                as u8,
-                        },
-                    );
-                }
-                10..=12 => {
-                    // Treasure.
-                    map.set_tile(
-                        player.target_x,
-                        player.target_y,
-                        TileType::Treasure {
-                            value: ((thread_rng().gen_range(0..50) + player.target_y) / 35) as u8,
-                        },
-                    );
-                }
-                20 => {
-                    // Flooding.
-                    for x in (player.target_x - 5)..=(player.target_x + 5) {
-                        for y in (player.target_y - 5)..=(player.target_y + 5) {
-                            if thread_rng().gen_range(0..100) < 10
-                                && (map.tile(x, y) == TileType::Empty || map.tile(x, y) == TileType::Dirt)
-                                && !(x == player.x && y == player.y)
-                                && x < ELEVATOR_SHAFT_X
-                            {
-                                map.set_tile(x, y, TileType::Water);
+            if player.use_energy(1) {
+                match thread_rng().gen_range(0..50) {
+                    0..=9 => {
+                        // Rock.
+                        map.set_tile(
+                            player.target_x,
+                            player.target_y,
+                            TileType::Rock {
+                                hardness: ((thread_rng().gen_range(0..50) + player.target_y) / 25)
+                                    as u8,
+                            },
+                        );
+                    }
+                    10..=12 => {
+                        // Treasure.
+                        map.set_tile(
+                            player.target_x,
+                            player.target_y,
+                            TileType::Treasure {
+                                value: ((thread_rng().gen_range(0..50) + player.target_y) / 35)
+                                    as u8,
+                            },
+                        );
+                    }
+                    20 => {
+                        // Flooding.
+                        for x in (player.target_x - 5)..=(player.target_x + 5) {
+                            for y in (player.target_y - 5)..=(player.target_y + 5) {
+                                if thread_rng().gen_range(0..100) < 10
+                                    && (map.tile(x, y) == TileType::Empty
+                                        || map.tile(x, y) == TileType::Dirt)
+                                    && !(x == player.x && y == player.y)
+                                    && x < ELEVATOR_SHAFT_X
+                                {
+                                    map.set_tile(x, y, TileType::Water);
+                                }
                             }
                         }
                     }
-                }
-                21 => {
-                    // Cave-in.
-                    for x in (player.target_x - 5)..=(player.target_x + 5) {
-                        for y in (player.target_y - 5)..=(player.target_y + 5) {
-                            if thread_rng().gen_range(0..100) < 50
-                                && (map.tile(x, y) == TileType::Empty || map.tile(x, y) == TileType::Ladder)
-                                && !(x == player.x && y == player.y)
-                                && x < ELEVATOR_SHAFT_X
-                            {
-                                map.set_tile(x, y, TileType::Dirt);
+                    21 => {
+                        // Cave-in.
+                        for x in (player.target_x - 5)..=(player.target_x + 5) {
+                            for y in (player.target_y - 5)..=(player.target_y + 5) {
+                                if thread_rng().gen_range(0..100) < 50
+                                    && (map.tile(x, y) == TileType::Empty
+                                        || map.tile(x, y) == TileType::Ladder)
+                                    && !(x == player.x && y == player.y)
+                                    && x < ELEVATOR_SHAFT_X
+                                {
+                                    map.set_tile(x, y, TileType::Dirt);
+                                }
                             }
                         }
                     }
+                    _ => map.set_tile(player.target_x, player.target_y, TileType::Empty),
                 }
-                _ => map.set_tile(player.target_x, player.target_y, TileType::Empty),
             }
         }
         TileType::Rock { .. } => {
@@ -98,7 +102,7 @@ pub fn move_player(mut player: ResMut<Player>, mut map: ResMut<Map>, elev: Res<E
         }
         TileType::Treasure { value } => {
             // Collect the treasure.
-            player.receive_money((1 << (value*2)) * TREASURE_BASE_VALUE);
+            player.receive_money((1 << (value * 2)) * TREASURE_BASE_VALUE);
             map.set_tile(player.target_x, player.target_y, TileType::Empty);
             player.x = player.target_x;
             player.y = player.target_y;

@@ -51,4 +51,3 @@ fn main() {
         .add_system(systems::text::update_energy)
         .run();
 }
-
