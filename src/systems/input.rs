@@ -66,16 +66,18 @@ pub fn elevator_input(
 ) {
     if keyboard_input.just_pressed(KeyCode::Space) {
         elev.set_target_depth(player.y - SKY_HEIGHT);
+    } else if keyboard_input.just_pressed(KeyCode::H) {
+        elev.set_target_depth(-SKY_HEIGHT);
     }
 }
 
 pub fn camera_input(
     active_cameras: Res<ActiveCameras>,
     mut camera_transform_query: Query<(&mut Transform,), With<Camera>>,
+    player: Res<Player>,
     keyboard_input: Res<Input<KeyCode>>,
     time: Res<Time>,
 ) {
-    const MOVE_SPEED: f32 = 1000.0;
     const ZOOM_SPEED: f32 = 10.0;
 
     if let Some(active_camera_entity) = active_cameras.get("camera_2d").and_then(|ac| ac.entity) {
@@ -86,17 +88,19 @@ pub fn camera_input(
                 tf.scale += Vec3::splat(ZOOM_SPEED) * time.delta_seconds();
             }
 
-            if keyboard_input.just_pressed(KeyCode::A) {
-                tf.translation.x += MOVE_SPEED * time.delta_seconds();
-            } else if keyboard_input.just_pressed(KeyCode::D) {
-                tf.translation.x -= MOVE_SPEED * time.delta_seconds();
-            }
+            tf.translation.x = (64 * player.x) as f32;
+            tf.translation.y = (-64 * player.y) as f32;
+            // if keyboard_input.just_pressed(KeyCode::A) {
+            //     tf.translation.x += MOVE_SPEED * time.delta_seconds();
+            // } else if keyboard_input.just_pressed(KeyCode::D) {
+            //     tf.translation.x -= MOVE_SPEED * time.delta_seconds();
+            // }
 
-            if keyboard_input.pressed(KeyCode::S) {
-                tf.translation.y -= MOVE_SPEED * time.delta_seconds();
-            } else if keyboard_input.pressed(KeyCode::W) {
-                tf.translation.y += MOVE_SPEED * time.delta_seconds();
-            }
+            // if keyboard_input.pressed(KeyCode::S) {
+            //     tf.translation.y -= MOVE_SPEED * time.delta_seconds();
+            // } else if keyboard_input.pressed(KeyCode::W) {
+            //     tf.translation.y += MOVE_SPEED * time.delta_seconds();
+            // }
         }
     }
 }

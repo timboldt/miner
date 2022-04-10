@@ -103,14 +103,14 @@ pub fn update_tilemap(player: Res<Player>, map: Res<Map>, mut query: Query<&mut 
         // For now, just draw the bank over top.
         // TODO: Make the bank a real entity.
         tm.set_tile(
-            ivec3(MAP_WIDTH - 10, 1-SKY_HEIGHT, 0),
+            ivec3(MAP_WIDTH - 10, 1 - SKY_HEIGHT, 0),
             Some(Tile {
                 sprite_index: SpriteIndex::BankTopLeft as u32,
                 ..Default::default()
             }),
         );
         tm.set_tile(
-            ivec3(MAP_WIDTH - 9, 1-SKY_HEIGHT, 0),
+            ivec3(MAP_WIDTH - 9, 1 - SKY_HEIGHT, 0),
             Some(Tile {
                 sprite_index: SpriteIndex::BankTopRight as u32,
                 ..Default::default()
@@ -130,7 +130,6 @@ pub fn update_tilemap(player: Res<Player>, map: Res<Map>, mut query: Query<&mut 
                 ..Default::default()
             }),
         );
-
     }
 }
 

@@ -59,8 +59,6 @@ fn setup(
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
 
     let mut cam = OrthographicCameraBundle::new_2d();
-    cam.transform.translation.x = 1800f32;
-    cam.transform.translation.y = -200f32;
     commands.spawn_bundle(cam);
 
     let tilemap = TileMap::default();
@@ -68,7 +66,7 @@ fn setup(
         tilemap,
         texture_atlas: texture_atlas_handle.clone(),
         transform: Transform {
-            scale: Vec3::splat(0.75),
+            scale: Vec3::splat(1.0),
             translation: Vec3::new(0.0, 0.0, 0.0),
             ..Default::default()
         },

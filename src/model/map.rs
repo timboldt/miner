@@ -101,6 +101,12 @@ impl Map {
         for x in 1..w - 1 {
             self.set_tile(x, GRASS_LEVEL, TileType::Grass);
         }
+        self.set_tile(3, GRASS_LEVEL, TileType::Ladder);
+        self.set_tile(3, GRASS_LEVEL + 1, TileType::Ladder);
+        self.set_tile(3, GRASS_LEVEL + 2, TileType::Ladder);
+        self.set_tile(MAP_WIDTH / 2, GRASS_LEVEL, TileType::Ladder);
+        self.set_tile(MAP_WIDTH / 2, GRASS_LEVEL + 1, TileType::Ladder);
+        self.set_tile(MAP_WIDTH / 2, GRASS_LEVEL + 2, TileType::Ladder);
 
         // Mine shaft.
         for y in GRASS_LEVEL..h - 1 {
@@ -110,11 +116,10 @@ impl Map {
             self.set_tile(w - 3, y, TileType::Empty);
         }
 
-        // Temporary test of shapes.
-        for i in 0..5 {
-            self.set_tile(w - 4, 8 + i, TileType::Rock { hardness: i as u8 });
+        // A little scenery along the elevator shaft.
+        for i in 0..=3 {
+            self.set_tile(w - 4, 20 * i + 10, TileType::Rock { hardness: i as u8 });
         }
-        self.set_tile(w - 6, 10, TileType::Water);
     }
 }
 

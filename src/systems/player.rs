@@ -39,38 +39,38 @@ pub fn move_player(mut player: ResMut<Player>, mut map: ResMut<Map>, elev: Res<E
     // Change the target tile, if needed.
     match map.tile(player.target_x, player.target_y) {
         TileType::Dirt => match thread_rng().gen_range(0..=player.target_y) {
-            1|2 => map.set_tile(
+            1 | 2 => map.set_tile(
                 player.target_x,
                 player.target_y,
                 TileType::Rock { hardness: 0 },
             ),
-            3|21|31|41|51 => map.set_tile(
+            3 | 21 | 31 | 41 | 51 => map.set_tile(
                 player.target_x,
                 player.target_y,
                 TileType::Rock { hardness: 1 },
             ),
-            22|32|42|52|62|72|82|92 => map.set_tile(
+            22 | 32 | 42 | 52 | 62 | 72 | 82 | 92 => map.set_tile(
                 player.target_x,
                 player.target_y,
                 TileType::Rock { hardness: 2 },
             ),
-            33|43|53|63|73|83|93 => map.set_tile(
+            33 | 43 | 53 | 63 | 73 | 83 | 93 => map.set_tile(
                 player.target_x,
                 player.target_y,
                 TileType::Rock { hardness: 3 },
             ),
-            44|64|84|94 => map.set_tile(player.target_x, player.target_y, TileType::Water),
-            5|15|25|35|45|55 => map.set_tile(
+            44 | 64 | 84 | 94 => map.set_tile(player.target_x, player.target_y, TileType::Water),
+            5 | 15 | 25 | 35 | 45 | 55 => map.set_tile(
                 player.target_x,
                 player.target_y,
                 TileType::Treasure { value: 0 },
             ),
-            16|26|36|46|56|66|76|86 => map.set_tile(
+            16 | 26 | 36 | 46 | 56 | 66 | 76 | 86 => map.set_tile(
                 player.target_x,
                 player.target_y,
                 TileType::Treasure { value: 1 },
             ),
-            37|57|77|87|97|99 => map.set_tile(
+            37 | 57 | 77 | 87 | 97 | 99 => map.set_tile(
                 player.target_x,
                 player.target_y,
                 TileType::Treasure { value: 2 },
