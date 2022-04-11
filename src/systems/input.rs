@@ -80,6 +80,8 @@ pub fn elevator_input(
         elev.set_target_depth(player.y - SKY_HEIGHT);
     } else if keyboard_input.just_pressed(KeyCode::H) {
         elev.set_target_depth(-SKY_HEIGHT);
+    } else if keyboard_input.just_pressed(KeyCode::B) {
+        elev.set_target_depth(MAP_HEIGHT - SKY_HEIGHT);
     }
 }
 
@@ -102,17 +104,6 @@ pub fn camera_input(
 
             tf.translation.x = (64 * player.x) as f32;
             tf.translation.y = (-64 * player.y) as f32;
-            // if keyboard_input.just_pressed(KeyCode::A) {
-            //     tf.translation.x += MOVE_SPEED * time.delta_seconds();
-            // } else if keyboard_input.just_pressed(KeyCode::D) {
-            //     tf.translation.x -= MOVE_SPEED * time.delta_seconds();
-            // }
-
-            // if keyboard_input.pressed(KeyCode::S) {
-            //     tf.translation.y -= MOVE_SPEED * time.delta_seconds();
-            // } else if keyboard_input.pressed(KeyCode::W) {
-            //     tf.translation.y += MOVE_SPEED * time.delta_seconds();
-            // }
         }
     }
 }

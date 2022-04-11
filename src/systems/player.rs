@@ -58,7 +58,7 @@ pub fn move_player(mut player: ResMut<Player>, mut map: ResMut<Map>, elev: Res<E
                             player.target_x,
                             player.target_y,
                             TileType::Treasure {
-                                value: ((thread_rng().gen_range(0..50) + player.target_y) / 25)
+                                value: ((thread_rng().gen_range(0..50) + player.target_y) / 35)
                                     as u8,
                             },
                         );
