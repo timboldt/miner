@@ -25,6 +25,7 @@ pub struct Player {
     pub y: i32,
     pub target_x: i32,
     pub target_y: i32,
+    pub rock_hammer: bool,
     money: i32,
     energy: i32,
 }
@@ -36,6 +37,7 @@ impl Player {
             y,
             target_x: x,
             target_y: y,
+            rock_hammer: false,
             money: INITIAL_MONEY,
             energy: INTIAL_ENERGY,
         }

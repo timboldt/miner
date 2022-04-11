@@ -69,6 +69,9 @@ pub fn player_input(
             elev.set_target_depth(0);
         }
     }
+
+    player.rock_hammer =
+        keyboard_input.pressed(KeyCode::LShift) || keyboard_input.pressed(KeyCode::RShift);
 }
 
 pub fn elevator_input(

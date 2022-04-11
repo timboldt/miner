@@ -97,8 +97,12 @@ pub fn move_player(mut player: ResMut<Player>, mut map: ResMut<Map>, elev: Res<E
                 }
             }
         }
-        TileType::Rock { .. } => {
-            // Don't allow chiselling rock yet.
+        TileType::Rock { hardness } => {
+            if player.rock_hammer && player.use_energy(3 << hardness) {
+                map.set_tile(player.target_x, player.target_y, TileType::Empty);
+                player.x = player.target_x;
+                player.y = player.target_y;
+            }
         }
         TileType::Treasure { value } => {
             // Collect the treasure.
