@@ -12,7 +12,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#![warn(clippy::all, clippy::pedantic)]
+#![warn(clippy::all)]
 
 pub struct Elevator {
     // The depth is the current location. Zero is ground level.

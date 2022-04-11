@@ -12,7 +12,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#![warn(clippy::all, clippy::pedantic)]
+#![warn(clippy::all)]
 
 pub const MAP_WIDTH: i32 = 40;
 pub const MAP_HEIGHT: i32 = 60;

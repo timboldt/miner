@@ -12,7 +12,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#![warn(clippy::all, clippy::pedantic)]
+#![warn(clippy::all)]
 
 use crate::constants::*;
 use crate::model::elevator::Elevator;
@@ -31,13 +31,13 @@ pub fn setup(
     let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(64.0, 64.0), 10, 4);
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
 
-    let mut cam = OrthographicCameraBundle::new_2d();
+    let cam = OrthographicCameraBundle::new_2d();
     commands.spawn_bundle(cam);
 
     let tilemap = TileMap::default();
     let tilemap_bundle = TileMapBundle {
         tilemap,
-        texture_atlas: texture_atlas_handle.clone(),
+        texture_atlas: texture_atlas_handle,
         transform: Transform {
             scale: Vec3::splat(1.0),
             translation: Vec3::new(0.0, 0.0, 0.0),

@@ -12,7 +12,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#![warn(clippy::all, clippy::pedantic)]
+#![warn(clippy::all)]
 
 use crate::constants::*;
 use crate::model::elevator::Elevator;

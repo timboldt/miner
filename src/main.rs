@@ -12,11 +12,9 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#![warn(clippy::all, clippy::pedantic)]
+#![warn(clippy::all)]
 
-use bevy::text::text2d_system;
-use bevy::{core::FixedTimestep, math::ivec3, prelude::*};
-
+use bevy::{core::FixedTimestep, prelude::*};
 use bevy_simple_tilemap::prelude::*;
 
 mod constants;
@@ -24,7 +22,6 @@ use constants::*;
 
 mod model;
 use model::elevator::Elevator;
-use model::map::{Map, TileType};
 use model::player::Player;
 
 mod systems;

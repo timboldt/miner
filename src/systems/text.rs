@@ -12,14 +12,10 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#![warn(clippy::all, clippy::pedantic)]
+#![warn(clippy::all)]
 
-use crate::constants::*;
-use crate::model::elevator::Elevator;
-use crate::model::map::{Map, TileType};
 use crate::model::player::Player;
-use bevy::{math::ivec3, prelude::*};
-use bevy_simple_tilemap::prelude::*;
+use bevy::prelude::*;
 
 #[derive(Component)]
 pub struct MoneyText;
@@ -27,11 +23,7 @@ pub struct MoneyText;
 #[derive(Component)]
 pub struct EnergyText;
 
-pub fn setup(
-    asset_server: Res<AssetServer>,
-    mut commands: Commands,
-    mut texture_atlases: ResMut<Assets<TextureAtlas>>,
-) {
+pub fn setup(asset_server: Res<AssetServer>, mut commands: Commands) {
     commands.spawn_bundle(UiCameraBundle::default());
     commands
         .spawn_bundle(TextBundle {

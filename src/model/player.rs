@@ -12,7 +12,7 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-#![warn(clippy::all, clippy::pedantic)]
+#![warn(clippy::all)]
 
 const INITIAL_MONEY: i32 = 1000;
 
@@ -74,10 +74,6 @@ impl Player {
         }
         ok
     }
-
-    pub fn is_dead(&self) -> bool {
-        self.money < 0 || self.energy < 0
-    }
 }
 
 #[cfg(test)]
@@ -91,7 +87,6 @@ mod tests {
         assert_eq!(4, p.y);
         assert_eq!(1000, p.money());
         assert_eq!(100, p.energy());
-        assert_eq!(false, p.is_dead());
     }
 
     #[test]
@@ -102,15 +97,12 @@ mod tests {
         p.receive_money(42);
         let m2 = p.money();
         assert_eq!(m1 + 42, m2);
-        assert_eq!(false, p.is_dead());
 
         p.pay_money(p.money());
         assert_eq!(0, p.money());
-        assert_eq!(false, p.is_dead());
 
         p.pay_money(1);
         assert_eq!(-1, p.money());
-        assert_eq!(true, p.is_dead());
     }
 
     #[test]
@@ -120,27 +112,21 @@ mod tests {
 
         p.refill_energy();
         assert_eq!(MAX_ENERGY, p.energy());
-        assert_eq!(false, p.is_dead());
 
         assert_eq!(true, p.use_energy(p.energy() / 2));
         assert_eq!(MAX_ENERGY / 2, p.energy());
-        assert_eq!(false, p.is_dead());
 
         p.refill_energy();
         assert_eq!(MAX_ENERGY, p.energy());
-        assert_eq!(false, p.is_dead());
 
         assert_eq!(true, p.use_energy(MAX_ENERGY / 2));
         assert_eq!(MAX_ENERGY / 2, p.energy());
-        assert_eq!(false, p.is_dead());
 
         assert_eq!(true, p.use_energy(MAX_ENERGY / 2));
         assert_eq!(0, p.energy());
-        assert_eq!(false, p.is_dead());
 
         assert_eq!(false, p.use_energy(1));
         assert_eq!(0, p.energy());
-        assert_eq!(false, p.is_dead());
     }
 
     #[test]
@@ -159,6 +145,5 @@ mod tests {
         p.refill_energy();
         assert_eq!(2, p.energy());
         assert_eq!(0, p.money());
-        assert_eq!(false, p.is_dead());
     }
 }
