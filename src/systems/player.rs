@@ -58,7 +58,7 @@ pub fn move_player(mut player: ResMut<Player>, mut map: ResMut<Map>, elev: Res<E
                             player.target_x,
                             player.target_y,
                             TileType::Treasure {
-                                value: ((thread_rng().gen_range(0..50) + player.target_y) / 35)
+                                value: ((thread_rng().gen_range(0..50) + player.target_y) / 25)
                                     as u8,
                             },
                         );
@@ -102,7 +102,7 @@ pub fn move_player(mut player: ResMut<Player>, mut map: ResMut<Map>, elev: Res<E
         }
         TileType::Treasure { value } => {
             // Collect the treasure.
-            player.receive_money((1 << (value * 2)) * TREASURE_BASE_VALUE);
+            player.receive_money((1 << value) * TREASURE_BASE_VALUE);
             map.set_tile(player.target_x, player.target_y, TileType::Empty);
             player.x = player.target_x;
             player.y = player.target_y;

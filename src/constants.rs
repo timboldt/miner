@@ -26,7 +26,7 @@ pub const GRASS_LEVEL: i32 = SKY_HEIGHT + 1;
 pub const PLAYER_LAYER: i32 = 1;
 pub const ELEVATOR_LAYER: i32 = 2;
 
-pub const TREASURE_BASE_VALUE: i32 = 100;
+pub const TREASURE_BASE_VALUE: i32 = 200;
 
 pub enum SpriteIndex {
     Empty = 0,

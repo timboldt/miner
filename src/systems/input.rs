@@ -58,6 +58,16 @@ pub fn player_input(
                 map.set_tile(player.x, player.y, TileType::Ladder);
             }
         }
+    } else if keyboard_input.just_pressed(KeyCode::R) {
+        // Rescue!
+        if player.x < ELEVATOR_SHAFT_X && player.y > GRASS_LEVEL {
+            player.pay_money(250);
+            player.x = ELEVATOR_SHAFT_X;
+            player.y = SKY_HEIGHT + depth;
+            player.target_x = player.x;
+            player.target_y = player.y;
+            elev.set_target_depth(0);
+        }
     }
 }
 
