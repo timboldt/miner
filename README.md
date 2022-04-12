@@ -32,6 +32,8 @@ Zoom controls:
 * Z - zoom out.
 * X - zoom in (be careful, the screen will disappear if you zoom in too much).
 
+![Screenshot](assets/screenshot1.png?raw=true "Screen Shot")
+
 ## Credits
 
 I originally started with Herbert Wolverson's Rogue Toolkit [Bracket-Lib](https://github.com/amethyst/bracket-lib), which makes 2D game development really simple. I later refactored it to use [Bevy](https://bevyengine.org/) instead.
