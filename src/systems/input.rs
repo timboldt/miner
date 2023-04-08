@@ -105,6 +105,7 @@ pub fn camera_input(
                 tf.scale += Vec3::splat(ZOOM_SPEED) * time.delta_seconds();
             }
 
+            tf.scale = tf.scale.max(Vec3::ONE);
             tf.translation.x = (64 * player.x) as f32;
             tf.translation.y = (-64 * player.y) as f32;
         }

@@ -16,21 +16,21 @@ Collect precious metals and gems to get money. Exchange money for more energy at
 
 Player controls:
 
-* Arrow keys - move player and dig dirt.
-* L - build a ladder.
-* Shift - In combination with arrow keys, allows you to remove rock.
-* R - request a rescue (for a price).
+- Arrow keys - move player and dig dirt.
+- L - build a ladder.
+- Shift - In combination with arrow keys, allows you to remove rock.
+- R - request a rescue (for a price).
 
 Elevator controls:
 
-* Space bar - summon the elevator to your level.
-* H - send the elevator home (to the top).
-* B - send the elevator to the bottom.
+- Space bar - summon the elevator to your level.
+- H - send the elevator home (to the top).
+- B - send the elevator to the bottom.
 
 Zoom controls:
 
-* Z - zoom out.
-* X - zoom in (be careful, the screen will disappear if you zoom in too much).
+- Z - zoom out.
+- X - zoom in.
 
 ![Screenshot](assets/screenshot1.png?raw=true "Screen Shot")
 
